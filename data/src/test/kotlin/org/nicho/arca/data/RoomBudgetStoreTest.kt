@@ -85,7 +85,7 @@ class RoomBudgetStoreTest {
         val salary = domainCategory(name = "Gaji", kind = CategoryKind.INCOME)
         categories.insert(salary)
 
-        assertFails<DomainError.CategoryNotBudgetable> { store.setBudget(salary.id, sep, 1_000_000) }
+        assertFails<DomainError.CategoryNotBudgeTable> { store.setBudget(salary.id, sep, 1_000_000) }
     }
 
     // A throw after the category write but before the allocation lands must undo both.

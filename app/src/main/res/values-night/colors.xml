@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Keep equal to ArcaDarkColors in designsystem/ColorTokens.kt. -->
+    <color name="arca_surface">#131210</color>
+    <color name="arca_ink">#F2EFE9</color>
+</resources>

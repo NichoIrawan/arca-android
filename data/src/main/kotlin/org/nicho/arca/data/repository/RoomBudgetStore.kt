@@ -55,6 +55,6 @@ internal class RoomBudgetStore @Inject constructor(
     // The DAO guard only says "0 rows". Look once more to say why, so the UI can explain it.
     private suspend fun refusal(id: CategoryId): Exception {
         val category = categories.getById(id.key()) ?: return missing("category", id.key())
-        return if (category.isSystemLocked) DomainError.CategoryIsSystemLocked() else DomainError.CategoryNotBudgetable()
+        return if (category.isSystemLocked) DomainError.CategoryIsSystemLocked() else DomainError.CategoryNotBudgeTable()
     }
 }
