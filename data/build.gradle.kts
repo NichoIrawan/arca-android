@@ -40,6 +40,22 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
+// Robolectric URL-encodes a space in the user's home path ("Nicholas%20Irawan") and then can't
+// find its own Android jar under ~/.m2. Gradle resolves that jar instead, copies it into this
+// module's build dir (no spaces), and Robolectric runs offline from there.
+val robolectricRuntime = configurations.create("robolectricRuntime")
+val robolectricDepsDir = layout.buildDirectory.dir("robolectric-deps")
+val copyRobolectricRuntime = tasks.register<Copy>("copyRobolectricRuntime") {
+    from(robolectricRuntime)
+    into(robolectricDepsDir)
+}
+tasks.withType<Test>().configureEach {
+    dependsOn(copyRobolectricRuntime)
+    systemProperty("robolectric.offline", "true")
+    systemProperty("robolectric.dependency.dir", robolectricDepsDir.get().asFile.absolutePath)
+    jvmArgs("--enable-native-access=ALL-UNNAMED") // Robolectric loads SQLite natively
+}
+
 dependencies {
     implementation(project(":domain"))
 
@@ -56,7 +72,9 @@ dependencies {
     testImplementation(project(":testing"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
+    add(robolectricRuntime.name, libs.robolectric.android.all)
     testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.junit)
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
