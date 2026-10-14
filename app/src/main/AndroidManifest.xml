@@ -2,27 +2,60 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Only MainActivity and CaptureActivity are exported (SDD-ARC-002 §15.2).
+         No component declares android:process (§4.4). -->
     <application
+        android:name=".ArcaApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ArcaAndroid">
+        android:theme="@style/Theme.Arca"
+        tools:targetApi="33">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.ArcaAndroid"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- Phase 4: <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" /> -->
         </activity>
+
+        <!-- DD-A12 / DD-A13: translucent, excluded from recents, pre-fill only. -->
+        <activity
+            android:name=".CaptureActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Arca.Capture"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="arca" android:host="capture" />
+            </intent-filter>
+        </activity>
+
+        <!-- Per-app language on API < 33 (LanguageController, SDD-ARC-002 §9.11). -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
+        <!-- Phase 4: Glance widget receivers (QuickAddWidget, BalanceWidget) and ArcaTileService. -->
+
     </application>
 
 </manifest>

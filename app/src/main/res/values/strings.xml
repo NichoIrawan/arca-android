@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Arca Android</string>
+    <!-- English. Every key here must also exist in values-in/strings.xml. -->
+    <string name="app_name" translatable="false">Arca</string>
+
+    <!-- Navigation (SDD-ARC-002 §9.1) -->
+    <string name="nav_summary">Overview</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_budget">Budget</string>
+    <string name="nav_accounts">Accounts</string>
 </resources>

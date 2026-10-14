@@ -1,0 +1,3 @@
+package org.nicho.arca.data
+
+// AtomicInsertTest (Robolectric, in-memory Room): SDD-ARC-002 §14.2.

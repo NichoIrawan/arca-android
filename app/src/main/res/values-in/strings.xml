@@ -1,0 +1,9 @@
+<resources>
+    <!-- Bahasa Indonesia. Keys mirror values/strings.xml. -->
+
+    <!-- Navigation (SDD-ARC-002 §9.1) -->
+    <string name="nav_summary">Ringkasan</string>
+    <string name="nav_transactions">Transaksi</string>
+    <string name="nav_budget">Anggaran</string>
+    <string name="nav_accounts">Akun</string>
+</resources>

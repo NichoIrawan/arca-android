@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Window theme only. All Compose styling comes from ArcaTheme (designsystem/). -->
+    <style name="Theme.Arca" parent="Theme.AppCompat.DayNight.NoActionBar" />
 
-    <style name="Theme.ArcaAndroid" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- CaptureActivity: translucent host for the capture sheet (DD-A12). -->
+    <style name="Theme.Arca.Capture">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

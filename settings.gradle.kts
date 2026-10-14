@@ -22,6 +22,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Arca Android"
+rootProject.name = "Arca"
 include(":app")
- 
+include(":data")
+include(":domain")
+include(":testing")
+// include(":benchmark")  // Phase 5: Macrobenchmark + baseline profile (SDD-ARC-002 §14.3)

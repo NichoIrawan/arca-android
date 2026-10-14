@@ -13,3 +13,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Secrets (NFR-S05): never commit
+google-services.json
+*.jks
+*.keystore
+keystore.properties
