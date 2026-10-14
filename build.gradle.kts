@@ -9,3 +9,10 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.room) apply false
 }
+subprojects {
+    tasks.withType<Test>().configureEach {
+        val loopbackDir = rootProject.layout.buildDirectory.dir("tmp/loopback").get().asFile
+        loopbackDir.mkdirs()
+        jvmArgs("-Djdk.net.unixdomain.tmpdir=${loopbackDir.absolutePath}")
+    }
+}
