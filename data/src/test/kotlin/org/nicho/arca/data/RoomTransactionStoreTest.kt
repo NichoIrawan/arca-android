@@ -111,6 +111,39 @@ class RoomTransactionStoreTest {
         assertEquals(0, store.count())
     }
 
+    // A transfer edit: members swap in one transaction; surviving rows keep createdAt.
+    @Test
+    fun replaceGroup_swapsMembersAtomically_keepingCreatedAt() = runTest {
+        val group = TransferGroupId.random()
+        val out = domainTransaction(bca.id, null, type = TransactionType.TRANSFER_OUT, transferGroupId = group, counterAccountId = gopay.id)
+        val into = domainTransaction(gopay.id, null, type = TransactionType.TRANSFER_IN, transferGroupId = group, counterAccountId = bca.id)
+        val fee = domainTransaction(bca.id, food.id, amountMinor = 2_500, transferGroupId = group)
+        store.insertAtomic(listOf(out, into, fee))
+
+        clock.millis = T0 + 5_000
+        store.replaceGroup(group, listOf(out.copy(amountMinor = 70_000), into.copy(amountMinor = 70_000)))
+
+        val rows = db.transactionDao().inGroup(group.key()).associateBy { it.id }
+        assertEquals(setOf(out.id.key(), into.id.key()), rows.keys) // the fee is gone
+        assertEquals(70_000L, rows.getValue(out.id.key()).amountMinor)
+        assertEquals(T0, rows.getValue(out.id.key()).createdAt)
+        assertEquals(T0 + 5_000, rows.getValue(out.id.key()).updatedAt)
+    }
+
+    @Test
+    fun replaceGroup_withABadMember_leavesTheOriginalGroup() = runTest {
+        val group = TransferGroupId.random()
+        val out = domainTransaction(bca.id, null, type = TransactionType.TRANSFER_OUT, transferGroupId = group, counterAccountId = gopay.id)
+        val into = domainTransaction(gopay.id, null, type = TransactionType.TRANSFER_IN, transferGroupId = group, counterAccountId = bca.id)
+        store.insertAtomic(listOf(out, into))
+
+        assertFails<PersistenceError.SaveFailed> {
+            store.replaceGroup(group, listOf(out, into.copy(accountId = AccountId.random())))
+        }
+
+        assertEquals(setOf(out, into), store.inGroup(group).toSet())
+    }
+
     @Test
     fun insertAtomic_withOneBadMember_writesNothing() = runTest {
         val group = TransferGroupId.random()

@@ -81,6 +81,16 @@ internal class RoomTransactionStore @Inject constructor(
         }
     }
 
+    // Rows that survive the edit keep their createdAt; only a fee added by the edit is new.
+    override suspend fun replaceGroup(groupId: TransferGroupId, txs: List<Transaction>) = saveOrFail {
+        db.withTransaction {
+            val now = clock.millis()
+            val createdAt = dao.inGroup(groupId.key()).associate { it.id to it.createdAt }
+            dao.deleteGroup(groupId.key())
+            dao.insertAll(txs.map { it.toEntity(createdAt = createdAt[it.id.key()] ?: now, updatedAt = now) })
+        }
+    }
+
     // One DELETE statement, so already atomic.
     override suspend fun deleteAll(groupId: TransferGroupId) = saveOrFail {
         dao.deleteGroup(groupId.key())
