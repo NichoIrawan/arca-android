@@ -32,6 +32,9 @@ internal interface CategoryDao {
     @Query("UPDATE categories SET isArchived = 1, updatedAt = :now WHERE id = :id")
     suspend fun archive(id: String, now: Long): Int
 
+    @Query("UPDATE categories SET isArchived = 0, updatedAt = :now WHERE id = :id")
+    suspend fun unarchive(id: String, now: Long): Int
+
     // Fees can be archived but never deleted (FR-250). A category with transactions also throws
     // here, via FK RESTRICT.
     @Query("DELETE FROM categories WHERE id = :id AND isSystemLocked = 0")

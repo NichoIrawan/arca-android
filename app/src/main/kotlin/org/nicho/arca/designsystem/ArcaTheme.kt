@@ -9,6 +9,10 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
+import org.nicho.arca.domain.formatting.AccessibleMoneyFormat
+import org.nicho.arca.domain.formatting.MoneyFormat
 import org.nicho.arca.domain.repository.ThemePreference
 
 /**
@@ -34,6 +38,15 @@ fun ArcaTheme(
         ThemePreference.DARK -> true
     }
     val colors = if (dark) ArcaDarkColors else ArcaLightColors
+    // The app's language (in-app choice or the device's) decides the number format.
+    val language = LocalConfiguration.current.locales[0].language
+    val money = remember(language) { MoneyFormat.of(language) }
+    val spoken = remember(language) {
+        AccessibleMoneyFormat(
+            if (language == "in" || language == "id") AccessibleMoneyFormat.SpokenLanguage.INDONESIAN
+            else AccessibleMoneyFormat.SpokenLanguage.ENGLISH,
+        )
+    }
 
     CompositionLocalProvider(
         LocalArcaColors provides colors,
@@ -42,6 +55,8 @@ fun ArcaTheme(
         LocalArcaShapes provides ArcaShapeTokens,
         LocalArcaShadow provides if (dark) ArcaDarkShadow else ArcaLightShadow,
         LocalArcaMotion provides ArcaMotionTokens,
+        LocalMoneyFormat provides money,
+        LocalSpokenMoney provides spoken,
     ) {
         MaterialTheme(
             colorScheme = colors.toMaterialColorScheme(),

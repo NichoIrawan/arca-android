@@ -1,0 +1,5 @@
+# Arca's own code, compiled ahead of time when a release or beta build is installed, so the
+# first screens don't run interpreted while the JIT warms up. Compose and the other AndroidX
+# libraries bring their own profiles; profileinstaller (pulled in by Compose) applies them.
+Lorg/nicho/arca/**;
+HSPLorg/nicho/arca/**;->**(**)**

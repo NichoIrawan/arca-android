@@ -70,9 +70,19 @@ object EnvelopeCalculator {
 
         var available = 0L
         var spentInEnvelopes = 0L
+        var carriedIn = 0L
+        var rolledOut = 0L
+        var reset = 0L
+        var overspent = 0L
         for (e in envelopes) {
             available = Math.addExact(available, e.availableMinor)
             spentInEnvelopes = Math.addExact(spentInEnvelopes, e.spentMinor)
+            carriedIn = Math.addExact(carriedIn, e.carryMinor)
+            when {
+                e.leftMinor < 0 -> overspent = Math.subtractExact(overspent, e.leftMinor)
+                e.rollsOver -> rolledOut = Math.addExact(rolledOut, e.leftMinor)
+                else -> reset = Math.addExact(reset, e.leftMinor)
+            }
         }
         var allSpending = spentInEnvelopes
         for (s in notBudgeted) allSpending = Math.addExact(allSpending, s.totalMinor)
@@ -86,6 +96,10 @@ object EnvelopeCalculator {
             totalLeftMinor = Math.subtractExact(available, spentInEnvelopes),
             totalStatus = status(if (envelopes.isEmpty()) null else available, spentInEnvelopes),
             allSpendingMinor = allSpending,
+            carriedInMinor = carriedIn,
+            rollsOutMinor = rolledOut,
+            resetsMinor = reset,
+            overspentMinor = overspent,
         )
     }
 
@@ -100,6 +114,19 @@ object EnvelopeCalculator {
         Math.multiplyExact(spentMinor, 10L) >= Math.multiplyExact(availableMinor, 9L) -> BudgetStatus.NEAR_LIMIT
         else -> BudgetStatus.UNDER_BUDGET
     }
+
+    /**
+     * How full an envelope's bar is: the share of available still left, 1 → 0, and 0 when
+     * overspent (FR-264: the bar drains, an overspent bar is empty). Geometry only (DD-12).
+     */
+    fun leftFraction(availableMinor: Long, leftMinor: Long): Float = when {
+        availableMinor <= 0L || leftMinor <= 0L -> 0f
+        leftMinor >= availableMinor -> 1f
+        else -> leftMinor.toFloat() / availableMinor.toFloat()
+    }
+
+    /** The "Over by" figure: how far spending is past available, or 0 when it isn't (FR-264). */
+    fun overBy(availableMinor: Long, spentMinor: Long): Long = maxOf(0L, Math.subtractExact(spentMinor, availableMinor))
 
     /** The fold for one category, or null if no budget is in force in [month]. */
     private fun envelopeFor(

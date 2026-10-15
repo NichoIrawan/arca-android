@@ -71,6 +71,10 @@ internal class RoomCategoryStore @Inject constructor(
         if (dao.archive(id.key(), clock.millis()) == 0) throw missing("category", id.key())
     }
 
+    override suspend fun unarchive(id: CategoryId) = saveOrFail {
+        if (dao.unarchive(id.key(), clock.millis()) == 0) throw missing("category", id.key())
+    }
+
     override suspend fun delete(id: CategoryId) = saveOrFail {
         db.withTransaction {
             val existing = dao.getById(id.key()) ?: return@withTransaction // already gone

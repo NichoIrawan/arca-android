@@ -25,11 +25,12 @@ data class ArcaShapes(
     val radiusMd: Dp,
     val radiusLg: Dp,
 ) {
-    val small: RoundedCornerShape get() = RoundedCornerShape(radiusSm)
-    val medium: RoundedCornerShape get() = RoundedCornerShape(radiusMd)
-    val large: RoundedCornerShape get() = RoundedCornerShape(radiusLg)
-    val sheetTop: RoundedCornerShape get() = RoundedCornerShape(topStart = radiusLg, topEnd = radiusLg)
-    val pill: RoundedCornerShape get() = CircleShape
+    // Made once, not on every read: shapes are read on every row of every list.
+    val small: RoundedCornerShape = RoundedCornerShape(radiusSm)
+    val medium: RoundedCornerShape = RoundedCornerShape(radiusMd)
+    val large: RoundedCornerShape = RoundedCornerShape(radiusLg)
+    val sheetTop: RoundedCornerShape = RoundedCornerShape(topStart = radiusLg, topEnd = radiusLg)
+    val pill: RoundedCornerShape = CircleShape
 }
 
 val ArcaShapeTokens = ArcaShapes(

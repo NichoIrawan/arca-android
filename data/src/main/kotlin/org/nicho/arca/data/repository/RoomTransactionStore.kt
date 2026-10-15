@@ -2,16 +2,19 @@ package org.nicho.arca.data.repository
 
 import androidx.room.withTransaction
 import java.time.Clock
+import java.time.Instant
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.nicho.arca.data.db.ArcaDatabase
 import org.nicho.arca.data.db.dao.TransactionDao
 import org.nicho.arca.data.mapper.key
+import org.nicho.arca.data.mapper.toCategoryId
 import org.nicho.arca.data.mapper.toDomain
 import org.nicho.arca.data.mapper.toEntity
 import org.nicho.arca.domain.model.AccountId
 import org.nicho.arca.domain.model.BalanceRow
+import org.nicho.arca.domain.model.CategoryId
 import org.nicho.arca.domain.model.Period
 import org.nicho.arca.domain.model.Transaction
 import org.nicho.arca.domain.model.TransactionId
@@ -44,11 +47,24 @@ internal class RoomTransactionStore @Inject constructor(
     override fun observeBalanceRows(): Flow<List<BalanceRow>> =
         dao.observeBalanceRows().map { rows -> rows.map { it.toDomain() } }
 
+    override fun observeHasAny(): Flow<Boolean> = dao.observeHasAny()
+
     override suspend fun byId(id: TransactionId): Transaction? = dao.getById(id.key())?.toDomain()
+
+    override fun observeById(id: TransactionId): Flow<Transaction?> = dao.observeById(id.key()).map { it?.toDomain() }
+
+    override fun observeGroup(groupId: TransferGroupId): Flow<List<Transaction>> =
+        dao.observeGroup(groupId.key()).map { rows -> rows.map { it.toDomain() } }
 
     override suspend fun allForExport(): List<Transaction> = dao.getAll().map { it.toDomain() }
 
     override suspend fun count(): Int = dao.count()
+
+    override fun observeCountsByCategory(): Flow<Map<CategoryId, Int>> =
+        dao.observeCountsByCategory().map { rows -> rows.associate { it.categoryId.toCategoryId() to it.count } }
+
+    override fun observeEarliestDate(): Flow<Instant?> =
+        dao.observeEarliestDate().map { millis -> millis?.let(Instant::ofEpochMilli) }
 
     // ── Writing ──
 

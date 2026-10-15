@@ -1,11 +1,13 @@
 package org.nicho.arca.testing
 
+import java.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import org.nicho.arca.domain.error.PersistenceError
 import org.nicho.arca.domain.model.AccountId
 import org.nicho.arca.domain.model.BalanceRow
+import org.nicho.arca.domain.model.CategoryId
 import org.nicho.arca.domain.model.Period
 import org.nicho.arca.domain.model.Transaction
 import org.nicho.arca.domain.model.TransactionId
@@ -58,11 +60,23 @@ class InMemoryTransactionStore internal constructor(
     override fun observeBalanceRows(): Flow<List<BalanceRow>> =
         rows.map { all -> all.map { BalanceRow(it.accountId, it.amountMinor, it.type) } }
 
+    override fun observeHasAny(): Flow<Boolean> = rows.map { it.isNotEmpty() }
+
     override suspend fun byId(id: TransactionId): Transaction? = rows.value.firstOrNull { it.id == id }
+
+    override fun observeById(id: TransactionId): Flow<Transaction?> = rows.map { all -> all.firstOrNull { it.id == id } }
+
+    override fun observeGroup(groupId: TransferGroupId): Flow<List<Transaction>> =
+        rows.map { all -> all.filter { it.transferGroupId == groupId } }
 
     override suspend fun allForExport(): List<Transaction> = rows.value.sortedBy { it.date }
 
     override suspend fun count(): Int = rows.value.size
+
+    override fun observeCountsByCategory(): Flow<Map<CategoryId, Int>> =
+        rows.map { all -> all.mapNotNull { it.categoryId }.groupingBy { it }.eachCount() }
+
+    override fun observeEarliestDate(): Flow<Instant?> = rows.map { all -> all.minOfOrNull { it.date } }
 
     // ── Writing ──
 

@@ -96,6 +96,15 @@ class CurrencyParserTest {
     }
 
     @Test
+    fun parseBalance_allowsNegativeAndZero() {
+        assertEquals(Result.Amount(-1_500_000), CurrencyParser.parseBalance("-1,5jt"))
+        assertEquals(Result.Amount(-120_000), CurrencyParser.parseBalance("−120.000"))
+        assertEquals(Result.Amount(0), CurrencyParser.parseBalance("0"))
+        assertEquals(Result.Amount(12_000_000), CurrencyParser.parseBalance("12jt"))
+        assertEquals(Result.Invalid(ParseError.NOT_A_NUMBER), CurrencyParser.parseBalance("-abc"))
+    }
+
+    @Test
     fun parseOrNull() {
         assertEquals(50_000L, CurrencyParser.parseOrNull("50rb"))
         assertEquals(null, CurrencyParser.parseOrNull("abc"))

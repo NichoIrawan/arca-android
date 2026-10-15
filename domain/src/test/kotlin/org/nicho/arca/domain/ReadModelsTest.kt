@@ -17,6 +17,10 @@ import org.nicho.arca.domain.readmodel.ObserveBudget
 import org.nicho.arca.domain.readmodel.ObserveCategoryDetail
 import org.nicho.arca.domain.readmodel.ObserveReports
 import org.nicho.arca.domain.readmodel.ObserveSummary
+import org.nicho.arca.domain.readmodel.ReportRange
+import org.nicho.arca.domain.readmodel.ReportSelection
+import org.nicho.arca.domain.readmodel.TrendGranularity
+import org.nicho.arca.domain.readmodel.SortOrder
 import org.nicho.arca.testing.InMemoryLedger
 import org.nicho.arca.testing.TestPeriodClock
 import org.nicho.arca.testing.testAccount
@@ -52,7 +56,7 @@ class ReadModelsTest {
     @Test
     fun summary_netPositionMovesByExactlyTheNewTransaction() = runTest {
         seed()
-        val observe = ObserveSummary(ledger.transactions, ledger.accounts, ledger.categories, clock.periodClock,
+        val observe = ObserveSummary(ledger.transactions, ledger.accounts, ledger.categories, ledger.budgets, clock.periodClock,
             dispatcher = UnconfinedTestDispatcher(testScheduler))
 
         observe().test {
@@ -75,7 +79,7 @@ class ReadModelsTest {
     @Test
     fun summary_aBackdatedExpense_changesTheBalanceButNotThisMonth() = runTest {
         seed()
-        val observe = ObserveSummary(ledger.transactions, ledger.accounts, ledger.categories, clock.periodClock,
+        val observe = ObserveSummary(ledger.transactions, ledger.accounts, ledger.categories, ledger.budgets, clock.periodClock,
             dispatcher = UnconfinedTestDispatcher(testScheduler))
 
         observe().test {
@@ -97,7 +101,8 @@ class ReadModelsTest {
 
         ObserveAccounts(ledger.transactions, ledger.accounts, UnconfinedTestDispatcher(testScheduler))().test {
             val model = awaitItem()
-            assertEquals(listOf(AccountType.CASH, AccountType.BANK, AccountType.EWALLET), model.groups.map { it.type })
+            assertEquals(listOf(AccountType.BANK, AccountType.EWALLET, AccountType.CASH), model.groups.map { it.type }) // largest first
+            assertEquals(1f, model.groups.map { it.share }.sum(), 0.0001f)
             assertEquals(800_000L, model.groups.single { it.type == AccountType.BANK }.subtotalMinor)
             assertEquals(300_000L, model.groups.single { it.type == AccountType.EWALLET }.subtotalMinor)
             assertEquals(listOf(old.id), model.archived.map { it.account.id })
@@ -110,17 +115,92 @@ class ReadModelsTest {
         seed()
         ledger.transactions.insert(testExpense(bca, food, 30_000, at(2026, 9, 10)))
         ledger.transactions.insert(testExpense(bca, food, 70_000, at(2026, 10, 2)))
-        val month = MutableStateFlow(ym(2026, 10))
+        val selection = MutableStateFlow(ReportSelection(ReportRange.Month(ym(2026, 10)), TrendGranularity.DAILY))
 
-        ObserveReports(ledger.transactions, ledger.categories, clock.periodClock, UnconfinedTestDispatcher(testScheduler))(month).test {
-            val october = awaitItem()
-            assertEquals(70_000L, october.summary.expenseMinor)
-            assertEquals(31, october.dailySpend.size)
+        ObserveReports(ledger.transactions, ledger.categories, clock.periodClock, UnconfinedTestDispatcher(testScheduler))(selection).test {
+            val october = expectMostRecentItem()
+            assertEquals(70_000L, october.expenses.totalMinor)
+            assertEquals(31, october.trend.size)
+            assertEquals(30_000L, october.expenses.previousMinor)
+            assertEquals(133, october.expenses.changePercent)
+            assertEquals(ym(2026, 9), october.earliestMonth)
 
-            month.value = ym(2026, 9)
+            selection.value = ReportSelection(ReportRange.Month(ym(2026, 9)), TrendGranularity.WEEKLY)
             val september = expectMostRecentItem()
             assertEquals(ym(2026, 9), september.month)
-            assertEquals(30_000L, september.summary.expenseMinor)
+            assertEquals(30_000L, september.expenses.totalMinor)
+            // 1–7, 8–14, 15–21, 22–30: the month's tail joins the fourth week
+            assertEquals(listOf(7, 7, 7, 9), september.trend.map { it.dayCount })
+            assertEquals(listOf(0L, 30_000L, 0L, 0L), september.trend.map { it.expenseMinor })
+            assertEquals(1f, september.trend[1].expenseFraction)
+        }
+    }
+
+    @Test
+    fun reports_rollingRanges_compareWithTheEqualRangeBefore() = runTest {
+        seed()
+        // NOW is Oct 14: the last 7 days are Oct 8–14, the 7 before them Oct 1–7.
+        ledger.transactions.insert(testExpense(bca, food, 40_000, at(2026, 10, 12)))
+        ledger.transactions.insert(testExpense(bca, food, 50_000, at(2026, 10, 3)))
+        ledger.transactions.insert(testExpense(bca, food, 999_000, at(2026, 9, 1)))
+
+        val selection = MutableStateFlow(ReportSelection(ReportRange.LastDays(7)))
+        ObserveReports(ledger.transactions, ledger.categories, clock.periodClock, UnconfinedTestDispatcher(testScheduler))(selection).test {
+            val week = expectMostRecentItem()
+            assertEquals(TrendGranularity.DAILY, week.granularity) // 7 days is always daily
+            assertEquals(7, week.trend.size)
+            assertEquals(java.time.LocalDate.of(2026, 10, 8), week.firstDay)
+            assertEquals(40_000L, week.expenses.totalMinor)
+            assertEquals(50_000L, week.expenses.previousMinor)
+            assertEquals(-20, week.expenses.changePercent)
+
+            selection.value = ReportSelection(ReportRange.LastDays(28), TrendGranularity.WEEKLY)
+            val month = expectMostRecentItem()
+            assertEquals(4, month.trend.size)
+            assertEquals(90_000L, month.expenses.totalMinor)
+        }
+    }
+
+    @Test
+    fun reports_foldEverythingAfterTheFourLargestIntoOne() = runTest {
+        seed()
+        val extra = (1..5).map { testCategory("C$it") }
+        extra.forEach { ledger.categories.insert(it) }
+        extra.forEachIndexed { i, c -> ledger.transactions.insert(testExpense(bca, c, (i + 1) * 10_000L, at(2026, 10, 5))) }
+
+        ObserveReports(ledger.transactions, ledger.categories, clock.periodClock, UnconfinedTestDispatcher(testScheduler))(
+            MutableStateFlow(ReportSelection(ReportRange.Month(ym(2026, 10)))),
+        ).test {
+            val model = expectMostRecentItem()
+            assertEquals(listOf("C5", "C4", "C3", "C2", null), model.expenseCategories.map { it.name })
+            assertEquals(10_000L, model.expenseCategories.last().totalMinor)
+            assertEquals(listOf(extra[0].id), model.expenseCategories.last().restIds)
+        }
+    }
+
+    @Test
+    fun reports_measureIncomeAndTheNetToo() = runTest {
+        seed()
+        ledger.transactions.insert(testIncome(bca, salary, 500_000, at(2026, 10, 1)))
+        ledger.transactions.insert(testExpense(bca, food, 200_000, at(2026, 10, 9)))
+        ledger.transactions.insert(testIncome(bca, salary, 100_000, at(2026, 9, 1)))
+        ledger.transactions.insertAtomic(testTransfer(bca, gopay, 50_000, at(2026, 10, 2))) // never counts
+
+        ObserveReports(ledger.transactions, ledger.categories, clock.periodClock, UnconfinedTestDispatcher(testScheduler))(
+            MutableStateFlow(ReportSelection(ReportRange.Month(ym(2026, 10)), TrendGranularity.WEEKLY)),
+        ).test {
+            val model = expectMostRecentItem()
+            assertEquals(500_000L, model.income.totalMinor)
+            assertEquals(400, model.income.changePercent)
+            assertEquals(300_000L, model.net.totalMinor)
+            assertEquals(200_000L, model.net.changeMinor) // September's net was 100,000
+            assertNull(model.net.changePercent)
+            assertEquals(listOf(500_000L, -200_000L, 0L, 0L), model.trend.map { it.netMinor })
+            assertEquals(listOf(1f, -0.4f, 0f, 0f), model.trend.map { it.netFraction })
+            assertEquals(listOf(1f, 0f, 0f, 0f), model.trend.map { it.incomeFraction })
+            assertEquals(listOf("Gaji"), model.incomeCategories.map { it.name })
+            assertEquals(1f, model.incomeShare)
+            assertEquals(0.4f, model.expenseShare)
         }
     }
 
@@ -156,18 +236,19 @@ class ReadModelsTest {
         repeat(18) { i -> ledger.transactions.insert(testExpense(payers[i % 3], food, 10_000, at(2026, 10, 1 + i % 13))) }
         val filter = MutableStateFlow<AccountId?>(null)
 
-        ObserveCategoryDetail(ledger.transactions, ledger.categories, ledger.budgets, clock.periodClock,
-            UnconfinedTestDispatcher(testScheduler))(food.id, MutableStateFlow(ym(2026, 10)), filter).test {
+        ObserveCategoryDetail(ledger.transactions, ledger.accounts, ledger.categories, ledger.budgets, clock.periodClock,
+            UnconfinedTestDispatcher(testScheduler))(food.id, MutableStateFlow(ym(2026, 10)), filter, MutableStateFlow(SortOrder.NEWEST)).test {
             val all = awaitItem()!!
-            assertEquals(18, all.transactions.size)
+            assertEquals(18, all.count)
+            assertEquals(18, all.days.sumOf { it.items.size })
             assertEquals(payers.map { it.id }.toSet(), all.accountIds.toSet())
             assertEquals(180_000L, all.envelope!!.spentMinor)
             assertNull(all.notBudgeted)
 
             filter.value = gopay.id
             val gopayOnly = expectMostRecentItem()!!
-            assertEquals(6, gopayOnly.transactions.size)
-            assertTrue(gopayOnly.transactions.all { it.accountId == gopay.id })
+            assertEquals(6, gopayOnly.count)
+            assertTrue(gopayOnly.days.flatMap { it.items }.all { it.transaction.accountId == gopay.id })
             assertEquals(180_000L, gopayOnly.envelope!!.spentMinor)
         }
     }

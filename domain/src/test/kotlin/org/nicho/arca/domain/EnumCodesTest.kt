@@ -24,7 +24,7 @@ class EnumCodesTest {
     @Test
     fun transactionTypeCodes() {
         assertEquals(
-            listOf("income", "expense", "transferOut", "transferIn"),
+            listOf("income", "expense", "transferOut", "transferIn", "adjustmentIn", "adjustmentOut"),
             TransactionType.entries.map { it.code },
         )
     }

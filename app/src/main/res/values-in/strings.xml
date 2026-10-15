@@ -1,9 +1,481 @@
 <resources>
     <!-- Bahasa Indonesia. Keys mirror values/strings.xml. -->
 
-    <!-- Navigation (SDD-ARC-002 §9.1) -->
+    <!-- Navigasi -->
     <string name="nav_summary">Ringkasan</string>
     <string name="nav_transactions">Transaksi</string>
     <string name="nav_budget">Anggaran</string>
     <string name="nav_accounts">Akun</string>
+
+    <!-- Aksi umum -->
+    <string name="action_add_transaction">Catat transaksi</string>
+    <string name="action_close">Tutup</string>
+    <string name="action_back">Kembali</string>
+    <string name="action_save">Simpan</string>
+    <string name="action_edit">Ubah</string>
+    <string name="action_delete">Hapus</string>
+    <string name="action_cancel">Batal</string>
+    <string name="action_undo">Urungkan</string>
+    <string name="action_select_date">Pilih tanggal</string>
+    <string name="action_previous_month">Bulan sebelumnya</string>
+    <string name="action_next_month">Bulan berikutnya</string>
+    <string name="action_see_all">Lihat semua</string>
+
+    <!-- Tanggal dan sapaan -->
+    <string name="date_today">Hari ini</string>
+    <string name="date_yesterday">Kemarin</string>
+    <string name="greeting_morning">Selamat pagi</string>
+    <string name="greeting_afternoon">Selamat siang</string>
+    <string name="greeting_evening">Selamat sore</string>
+    <string name="greeting_night">Selamat malam</string>
+
+    <!-- Arus uang -->
+    <string name="flow_in">Masuk</string>
+    <string name="flow_out">Keluar</string>
+    <string name="flow_net">Selisih</string>
+
+    <!-- Transaksi di daftar -->
+    <string name="transaction_transfer">Transfer</string>
+    <string name="transaction_fee">Biaya</string>
+    <string name="transaction_fee_subtitle">Biaya transfer · %1$s</string>
+
+    <!-- Ringkasan -->
+    <string name="summary_title">Ringkasan %1$s</string>
+    <string name="summary_left_to_spend">Sisa anggaran · %1$s</string>
+    <string name="summary_left_of">%1$s dari %2$s</string>
+    <string name="summary_budget_left">Sisa %1$s dari %2$s</string>
+    <plurals name="summary_budget_over">
+        <item quantity="other">%d lewat batas</item>
+    </plurals>
+    <plurals name="summary_budget_near">
+        <item quantity="other">%d hampir habis</item>
+    </plurals>
+    <string name="summary_by_category">Pengeluaran per Kategori</string>
+    <string name="summary_full_report">Lihat laporan lengkap</string>
+    <string name="summary_recent">Terbaru</string>
+    <string name="summary_insight_less">Pengeluaran lebih sedikit dari %1$s</string>
+    <string name="summary_insight_more">Pengeluaran lebih banyak dari %1$s</string>
+    <string name="summary_insight_same">Pengeluaran kurang lebih sama dengan %1$s</string>
+    <string name="summary_insight_down">Pengeluaranmu turun %1$d%%.</string>
+    <string name="summary_insight_up">Pengeluaranmu naik %1$d%%.</string>
+    <string name="summary_insight_flat">Pengeluaranmu tidak berubah.</string>
+    <string name="summary_insight_left">Sisa anggaran %1$s.</string>
+    <string name="summary_empty_title">Belum ada transaksi</string>
+    <string name="summary_empty_body">Kekayaan bersih dan ringkasan bulananmu akan muncul di sini setelah kamu mencatat transaksi pertama.</string>
+    <string name="summary_empty_action">Catat transaksi pertama</string>
+
+    <!-- Transaksi -->
+    <string name="transactions_header_out">%1$s keluar</string>
+    <plurals name="transactions_expense_count">
+        <item quantity="other">%d pengeluaran</item>
+    </plurals>
+    <string name="transactions_empty_title">Belum ada transaksi</string>
+    <string name="transactions_empty_body">Pemasukan dan pengeluaranmu akan muncul di sini, dikelompokkan per hari.</string>
+    <string name="transactions_no_match">Tidak ada yang cocok dengan filter ini.</string>
+
+    <!-- Filter -->
+    <string name="filter_title">Filter</string>
+    <string name="filter_reset">Atur ulang</string>
+    <string name="filter_apply">Terapkan</string>
+    <string name="filter_all">Semua</string>
+    <string name="filter_income">Pemasukan</string>
+    <string name="filter_expenses">Pengeluaran</string>
+    <string name="filter_transfers">Transfer</string>
+    <string name="filter_period">Periode</string>
+    <string name="filter_this_month">Bulan ini</string>
+    <string name="filter_last_month">Bulan lalu</string>
+    <string name="filter_last_30_days">30 hari</string>
+    <string name="filter_last_3_months">3 bulan</string>
+    <string name="filter_range">Rentang…</string>
+    <string name="filter_categories">Kategori</string>
+    <string name="filter_sort">Urutkan</string>
+    <string name="filter_all_accounts">Semua akun</string>
+    <string name="filter_all_categories">Semua kategori</string>
+    <plurals name="filter_n_accounts">
+        <item quantity="other">%d akun</item>
+    </plurals>
+    <plurals name="filter_n_categories">
+        <item quantity="other">%d kategori</item>
+    </plurals>
+    <plurals name="filter_last_n_days">
+        <item quantity="other">%d hari terakhir</item>
+    </plurals>
+    <string name="sort_newest">Terbaru</string>
+    <string name="sort_oldest">Terlama</string>
+    <string name="sort_largest">Terbesar</string>
+
+    <!-- Cari -->
+    <string name="search_title">Cari transaksi</string>
+    <string name="search_placeholder">Cari catatan</string>
+    <string name="search_hint">Mencari di catatan transaksi</string>
+    <plurals name="search_results">
+        <item quantity="other">%1$d hasil untuk “%2$s”</item>
+    </plurals>
+
+    <!-- Detail transaksi -->
+    <string name="detail_transfer_fee">Biaya transfer</string>
+    <string name="detail_counted_in">Dihitung di</string>
+    <string name="detail_reports_excluded">Laporan: tidak dihitung</string>
+    <string name="detail_reports_included">Laporan: dihitung</string>
+    <string name="detail_no_note">Belum ada</string>
+    <plurals name="detail_linked_records">
+        <item quantity="other">%d catatan terhubung</item>
+    </plurals>
+    <plurals name="detail_linked_delete_note">
+        <item quantity="other">Menghapus transfer ini menghapus %d catatan sekaligus.</item>
+    </plurals>
+    <string name="detail_leg_out">Keluar</string>
+    <string name="detail_leg_in">Masuk</string>
+    <string name="detail_fee_locked">%1$s · kategori terkunci</string>
+    <string name="detail_delete_transfer">Hapus transfer</string>
+    <string name="detail_delete_transaction">Hapus transaksi</string>
+    <string name="detail_undo_note">Kamu bisa mengurungkannya beberapa detik setelah menghapus.</string>
+
+    <!-- Akun -->
+    <string name="accounts_add">Tambah akun</string>
+    <string name="accounts_net_worth">Kekayaan Bersih</string>
+    <string name="accounts_favorites">Favorit</string>
+    <string name="accounts_favorite">Favorit</string>
+    <string name="accounts_negative_balance">Saldo minus</string>
+    <string name="accounts_archived">Diarsipkan (%1$d)</string>
+    <string name="accounts_empty_title">Belum ada akun</string>
+    <string name="accounts_empty_body">Akun adalah tempat uangmu berada: dompet, rekening bank, atau e-wallet. Tambahkan satu untuk mulai mencatat.</string>
+    <plurals name="accounts_transaction_count">
+        <item quantity="other">%d transaksi</item>
+    </plurals>
+    <string name="accounts_opening_balance">Saldo awal %1$s</string>
+    <string name="accounts_make_favorite">Jadikan favorit</string>
+    <string name="accounts_unfavorite">Hapus dari favorit</string>
+    <string name="accounts_archive">Arsipkan akun</string>
+    <string name="accounts_unarchive">Batalkan arsip</string>
+    <string name="accounts_delete">Hapus akun</string>
+    <string name="accounts_history">Riwayat</string>
+    <string name="accounts_new_title">Akun Baru</string>
+    <string name="accounts_edit_title">Ubah Akun</string>
+    <string name="accounts_current_balance">Saldo Saat Ini</string>
+    <string name="accounts_current_balance_help">Dihitung otomatis dari saldo awal dan semua transaksi akun ini.</string>
+    <string name="accounts_name">Nama</string>
+    <string name="accounts_name_placeholder">mis. BCA</string>
+    <string name="accounts_type">Jenis</string>
+    <string name="accounts_opening_balance_label">Saldo awal</string>
+    <string name="accounts_opening_help">Isi akun saat kamu mulai mencatatnya. Boleh minus.</string>
+    <string name="accounts_opening_locked">Terkunci setelah transaksi pertama dicatat, agar riwayatmu tetap akurat.</string>
+    <string name="accounts_favorite_help">Akun favorit muncul paling depan saat mencatat transaksi.</string>
+    <string name="accounts_archive_help">Akun ini punya transaksi. Arsipkan untuk menyembunyikannya.</string>
+    <string name="account_type_cash">Tunai</string>
+    <string name="account_type_bank">Bank</string>
+    <string name="account_type_ewallet">E-Wallet</string>
+    <string name="account_type_other">Lainnya</string>
+
+    <!-- Anggaran -->
+    <string name="budget_left">tersisa</string>
+    <string name="budget_spent_of">Terpakai %1$s dari %2$s</string>
+    <string name="budget_over_by">Lebih %1$s</string>
+    <string name="budget_left_to_spend">Sisa anggaran</string>
+    <string name="budget_no_envelopes">Belum ada anggaran. Atur anggaran pada kategori untuk memulai amplop.</string>
+    <string name="budget_hero_meta">Terpakai %1$s · Total anggaran %2$s</string>
+    <string name="budget_total_help">Total anggaran adalah jumlah semua amplopmu. Ubah amplop untuk mengubahnya.</string>
+    <string name="budget_view_expenses">Pengeluaran</string>
+    <string name="budget_view_income">Pemasukan</string>
+    <string name="budget_budgeted">Dianggarkan</string>
+    <string name="budget_not_budgeted">Tanpa anggaran</string>
+    <string name="budget_spent">Terpakai %1$s</string>
+    <string name="budget_spent_never">Terpakai %1$s · tidak pernah dianggarkan</string>
+    <string name="budget_set_budget">Atur anggaran</string>
+    <string name="budget_not_counted">Tidak dihitung dalam total anggaranmu.</string>
+    <string name="budget_archived">Diarsipkan (%1$d)</string>
+    <string name="budget_archived_help">Kategori yang diarsipkan tidak muncul saat mencatat transaksi. Riwayatnya tetap utuh.</string>
+    <string name="budget_received">Diterima</string>
+    <string name="budget_income_help">Pemasukan tidak punya anggaran. Amplop hanya untuk pengeluaran.</string>
+    <string name="budget_spending_report">Laporan pengeluaran</string>
+    <string name="budget_resets">Diatur ulang %1$s</string>
+    <string name="budget_rolls_over_from">Sisa terbawa · +%1$s dari %2$s</string>
+    <string name="budget_rolls_over_nothing">Sisa terbawa · tidak ada yang terbawa</string>
+
+    <!-- Detail dan editor kategori -->
+    <string name="category_rolls_over">Sisa terbawa</string>
+    <string name="category_resets_monthly">Diatur ulang tiap bulan</string>
+    <string name="category_percent_left">Tersisa %1$d%%</string>
+    <string name="category_budget">Anggaran</string>
+    <string name="category_spent">Terpakai</string>
+    <string name="category_carried_in">Terbawa</string>
+    <string name="category_not_budgeted_spent">Tanpa anggaran · terpakai %1$s</string>
+    <string name="category_income_no_budget">Kategori pemasukan tidak punya anggaran.</string>
+    <plurals name="category_transaction_count">
+        <item quantity="other">%d transaksi</item>
+    </plurals>
+    <string name="category_new_title">Kategori Baru</string>
+    <string name="category_edit_title">Ubah Kategori</string>
+    <string name="category_name_placeholder">mis. Kopi</string>
+    <string name="category_monthly_budget">Anggaran bulanan</string>
+    <string name="category_no_budget">Tanpa anggaran</string>
+    <string name="category_budget_help_new">Opsional. Tanpa anggaran, pengeluaran tetap tercatat di bagian Tanpa anggaran.</string>
+    <string name="category_budget_help_edit">Perubahan berlaku mulai bulan ini. Bulan sebelumnya tetap memakai anggaran lamanya.</string>
+    <string name="category_remove_budget">Hapus anggaran</string>
+    <string name="category_roll_over">Bawa sisa ke bulan berikutnya</string>
+    <string name="category_roll_over_on">Uang yang belum terpakai masuk ke amplop bulan depan. Kelebihan pengeluaran tidak pernah terbawa.</string>
+    <string name="category_roll_over_off">Amplop diatur ulang tiap tanggal 1. Uang yang belum terpakai tidak terbawa.</string>
+    <string name="category_type_locked">Jenis tidak bisa diubah setelah kategori dibuat, agar laporan lama tetap sama.</string>
+    <string name="category_archive">Arsipkan kategori</string>
+    <string name="category_unarchive">Batalkan arsip</string>
+    <string name="category_delete">Hapus kategori</string>
+    <string name="category_archive_help">Kategori yang punya transaksi tidak bisa dihapus. Mengarsipkan menyembunyikannya saat mencatat transaksi; riwayatnya tetap utuh.</string>
+    <string name="category_in_use">Kategori ini punya transaksi, jadi hanya bisa diarsipkan.</string>
+    <string name="editor_color">Warna</string>
+    <string name="editor_icon">Ikon</string>
+
+    <!-- Laporan -->
+    <string name="reports_title">Laporan</string>
+    <string name="reports_total_expenses">Total Pengeluaran</string>
+    <string name="reports_trend">Tren Pengeluaran</string>
+    <string name="reports_trend_description">Pengeluaran harian bulan ini. Hari tertinggi: %1$s</string>
+    <string name="reports_peak_day">Hari tersibuk: %1$s</string>
+    <string name="reports_no_expenses">Tidak ada pengeluaran di periode ini.</string>
+    <string name="reports_less_than">%1$d%% lebih sedikit dari %2$s</string>
+    <string name="reports_more_than">%1$d%% lebih banyak dari %2$s</string>
+    <string name="reports_same_as">Sama dengan %1$s</string>
+    <string name="reports_no_comparison">Tidak ada pembanding dari %1$s</string>
+
+    <!-- Pengaturan -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_appearance">Tampilan</string>
+    <string name="settings_theme_light">Terang</string>
+    <string name="settings_theme_dark">Gelap</string>
+    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_language">Bahasa</string>
+    <string name="settings_security">Keamanan</string>
+    <string name="settings_fingerprint">Kunci dengan sidik jari</string>
+    <string name="settings_fingerprint_help">Meminta sidik jari atau kunci layar saat membuka Arca, dan menyembunyikannya di aplikasi terbaru.</string>
+    <string name="settings_data">Data</string>
+    <string name="settings_export">Ekspor data (CSV)</string>
+    <string name="settings_export_soon">Segera hadir</string>
+    <string name="settings_demo_data">Muat data contoh</string>
+    <string name="settings_demo_debug_only">Hanya untuk build uji internal &amp; debug</string>
+    <string name="settings_demo_loading">Memuat…</string>
+    <string name="settings_demo_loaded">Data contoh dimuat.</string>
+    <string name="settings_demo_confirm_title">Ganti datamu?</string>
+    <string name="settings_demo_confirm_body">Kamu sudah punya akun atau transaksi. Memuat data contoh akan menghapusnya dan tidak bisa dibatalkan.</string>
+    <string name="settings_demo_confirm_replace">Ganti</string>
+    <string name="settings_about">Tentang</string>
+    <string name="settings_version">Versi</string>
+
+    <!-- Catat -->
+    <string name="capture_title_new">Transaksi Baru</string>
+    <string name="capture_title_edit">Ubah Transaksi</string>
+    <string name="capture_mode_expense">Pengeluaran</string>
+    <string name="capture_mode_income">Pemasukan</string>
+    <string name="capture_mode_transfer">Transfer</string>
+    <string name="capture_amount_hint">Ketik “50rb” · menjadi Rp 50.000</string>
+    <string name="capture_account">Akun</string>
+    <string name="capture_category">Kategori</string>
+    <string name="capture_from">Dari</string>
+    <string name="capture_to">Ke</string>
+    <string name="capture_fee">Biaya</string>
+    <string name="capture_date">Tanggal</string>
+    <string name="capture_note">Catatan</string>
+    <string name="capture_optional">Opsional</string>
+    <string name="capture_choose_account">Pilih akun</string>
+
+    <!-- Validasi (SDD-ARC-001 §11.3) -->
+    <string name="issue_amount_positive">Masukkan jumlah lebih dari 0</string>
+    <string name="issue_amount_unclear">Jumlah tidak jelas — coba 50000, 50rb, atau 1,5jt</string>
+    <string name="issue_amount_too_large">Jumlahnya terlalu besar</string>
+    <string name="issue_account_required">Pilih akun</string>
+    <string name="issue_account_archived">Akun ini diarsipkan. Pilih akun lain</string>
+    <string name="issue_category_required">Pilih kategori</string>
+    <string name="issue_category_mismatch">Pilih kategori dengan jenis yang sama</string>
+    <string name="issue_future_date">Tanggal tidak bisa di masa depan</string>
+    <string name="issue_note_too_long">Catatan maksimal 280 karakter</string>
+    <string name="issue_same_account">Pilih akun tujuan yang berbeda</string>
+    <string name="issue_destination_required">Pilih akun tujuan</string>
+    <string name="issue_fee_invalid">Masukkan biaya lebih dari 0, atau kosongkan</string>
+    <string name="issue_save_failed">Gagal menyimpan. Coba lagi</string>
+    <string name="issue_name_required">Masukkan nama</string>
+    <string name="issue_account_name_too_long">Nama maksimal 40 karakter</string>
+    <string name="issue_category_name_too_long">Nama maksimal 30 karakter</string>
+
+    <!-- Urungkan (DD-A11) -->
+    <string name="undo_transaction_deleted">Transaksi dihapus</string>
+    <plurals name="undo_transfer_deleted">
+        <item quantity="other">Transfer dihapus (%d catatan)</item>
+    </plurals>
+    <string name="budget_hero_over">Lebih</string>
+    <string name="budget_hero_left_over">Sisa akhir</string>
+    <string name="budget_hero_available">Tersedia</string>
+    <string name="budget_meta_closed">Selesai</string>
+    <string name="budget_meta_starts">Mulai %1$s</string>
+    <string name="budget_meta_ends_today">Berakhir hari ini</string>
+    <string name="budget_closed_note">%1$s terbawa ke %2$s dan %3$s direset pada %4$s.</string>
+    <string name="budget_closed_over">Kelebihan pengeluaran (%1$s) tidak terbawa.</string>
+    <string name="budget_total_help_carried">Total anggaran adalah jumlah semua amplopmu (termasuk %1$s yang terbawa). Ubah amplop untuk mengubahnya.</string>
+    <string name="budget_word_unspent">tak terpakai</string>
+    <string name="budget_word_available">tersedia</string>
+    <string name="budget_no_transactions">Tidak ada transaksi</string>
+    <string name="budget_no_transactions_yet">Belum ada transaksi</string>
+    <string name="budget_reset_past">Direset %1$s</string>
+    <string name="budget_rolled_into">Terbawa · %1$s ke %2$s</string>
+    <string name="budget_rolls_over_overspent">Sisa terbawa · kelebihan tidak terbawa</string>
+    <string name="budget_rolls_over_nothing_left">Sisa terbawa · tidak ada sisa</string>
+    <string name="transaction_adjustment">Penyesuaian saldo</string>
+    <plurals name="budget_meta_days_left">
+        <item quantity="other">%d hari lagi</item>
+    </plurals>
+    <string name="summary_other">Lainnya</string>
+    <string name="summary_view_budget">Lihat anggaran</string>
+    <string name="category_kind_expense">Pengeluaran</string>
+    <string name="category_kind_income">Pemasukan</string>
+    <string name="category_over">lebih</string>
+    <string name="category_spent_word">terpakai</string>
+    <string name="category_received_word">diterima</string>
+    <string name="category_never_budgeted">Biaya tidak pernah dianggarkan: tetap tercatat sebagai pengeluaran, tapi tanpa amplop.</string>
+    <string name="category_not_budgeted_help">Belum dianggarkan. Pengeluaran tetap tercatat; ketuk Ubah untuk membuat amplop.</string>
+    <string name="action_done">Selesai</string>
+    <string name="reports_export">Ekspor CSV</string>
+    <string name="reports_range_7">7 hari</string>
+    <string name="reports_range_28">28 hari</string>
+    <string name="reports_range_month">Bulanan</string>
+    <string name="reports_choose_month">Pilih Bulan</string>
+    <string name="reports_previous">sebelumnya</string>
+    <string name="reports_first_on_record">Bulan pertama yang tercatat</string>
+    <string name="reports_same_as_short">Sama seperti %1$s</string>
+    <string name="reports_vs">vs %1$s</string>
+    <string name="reports_daily">Harian</string>
+    <string name="reports_weekly">Mingguan</string>
+    <string name="reports_week_n">Minggu %1$d</string>
+    <string name="reports_previous_bar">Batang sebelumnya</string>
+    <string name="reports_next_bar">Batang berikutnya</string>
+    <string name="reports_everything_else">Lainnya</string>
+    <string name="reports_no_change">Tidak berubah</string>
+    <string name="reports_previous_year">Tahun sebelumnya</string>
+    <string name="reports_next_year">Tahun berikutnya</string>
+    <string name="reports_data_since">Data tersedia sejak %1$s.</string>
+    <string name="reports_exported">Diekspor</string>
+    <string name="reports_export_this_month">Bulan ini</string>
+    <string name="reports_export_3_months">3 bulan terakhir</string>
+    <string name="reports_export_all">Semua data</string>
+    <string name="reports_export_help">Kolom: tanggal, akun, kategori, jenis, jumlah, catatan. Disimpan di perangkatmu sebagai cadangan.</string>
+    <string name="reports_export_failed">Berkas tidak bisa disimpan. Coba lagi.</string>
+    <string name="reports_export_action">Ekspor</string>
+    <plurals name="reports_previous_days">
+        <item quantity="other">%d hari sebelumnya</item>
+    </plurals>
+    <plurals name="reports_n_days">
+        <item quantity="other">(%d hari)</item>
+    </plurals>
+    <plurals name="reports_exported_count">
+        <item quantity="other">%d transaksi disimpan di Unduhan</item>
+    </plurals>
+    <string name="state_expanded">Terbuka</string>
+    <string name="state_collapsed">Tertutup</string>
+    <string name="accounts_negative_one">%1$s di bawah nol</string>
+    <string name="accounts_negative_help">Periksa pemasukan atau transfer yang terlewat, atau sesuaikan saldo di halaman akunnya.</string>
+    <string name="accounts_archived_help">Akun yang diarsipkan tidak muncul saat mencatat transaksi dan tidak dihitung dalam kekayaan bersih. Riwayatnya tetap utuh.</string>
+    <string name="accounts_common_types">Jenis akun umum</string>
+    <plurals name="accounts_negative_many">
+        <item quantity="other">%d akun di bawah nol</item>
+    </plurals>
+    <string name="adjust_title">Sesuaikan saldo</string>
+    <string name="adjust_action">Sesuaikan saldo</string>
+    <string name="adjust_calculated">Saldo %1$s menurut Arca</string>
+    <string name="adjust_actual">Saldo sebenarnya</string>
+    <string name="adjust_hint">Isi saldo yang benar-benar ada hari ini. Pakai tanda minus untuk saldo minus, mis. -120rb.</string>
+    <string name="adjust_matches">Saldonya sudah sama. Tidak ada yang perlu dicatat.</string>
+    <string name="adjust_will_record">Mencatat penyesuaian %1$s hari ini</string>
+    <string name="adjust_explainer">Tidak dihitung sebagai pemasukan atau pengeluaran. Saldo sebelumnya tetap seperti semula.</string>
+    <string name="adjust_negative">Saldo ini di bawah nol.</string>
+    <string name="adjust_note_placeholder">Opsional, mis. dicek di ATM</string>
+    <string name="adjust_save">Simpan penyesuaian</string>
+    <string name="transaction_to">Ke %1$s</string>
+    <string name="transaction_from">Dari %1$s</string>
+    <string name="accounts_opening_since">Saldo awal %1$s · sejak %2$s</string>
+    <string name="accounts_balance_trend">Tren Saldo</string>
+    <string name="accounts_trend_today">Hari ini, %1$s</string>
+    <string name="accounts_trend_end_of">Akhir %1$s</string>
+    <string name="accounts_trend_week_of">Minggu %1$s</string>
+    <string name="accounts_trend_monthly">Bulanan</string>
+    <string name="accounts_negative_this">Saldo ini di bawah nol</string>
+    <string name="accounts_negative_this_help">Jika tidak sesuai, periksa pemasukan atau transfer yang terlewat, atau sesuaikan saldonya.</string>
+    <plurals name="accounts_transactions_word">
+        <item quantity="other">transaksi</item>
+    </plurals>
+    <string name="date_two_days_ago">2 hari lalu</string>
+    <string name="date_pick_title">Pilih tanggal</string>
+    <string name="date_selected">Tanggal terpilih</string>
+    <string name="date_select">Pilih tanggal</string>
+    <string name="range_last_7_days">7 hari terakhir</string>
+    <string name="range_this_quarter">Kuartal ini</string>
+    <string name="range_title">Rentang tanggal</string>
+    <string name="range_label">Rentang</string>
+    <string name="range_pick_end">Pilih tanggal akhir</string>
+    <string name="range_apply">Terapkan rentang</string>
+    <string name="filter_clear_all">Hapus semua</string>
+    <string name="filter_remove">Hapus filter %1$s</string>
+    <string name="filter_title_active">Filter, aktif</string>
+    <string name="filter_see_all">Lihat semua</string>
+    <string name="filter_show_less">Lebih sedikit</string>
+    <string name="filter_selected_meta">%1$d dipilih · %2$d dari %3$d</string>
+    <string name="transactions_out_plain">%1$s keluar</string>
+    <string name="transactions_header_out_month">%1$s keluar bulan ini</string>
+    <plurals name="range_days">
+        <item quantity="other">%d hari</item>
+    </plurals>
+    <plurals name="transactions_results">
+        <item quantity="other">%d hasil</item>
+    </plurals>
+    <plurals name="filter_apply_results">
+        <item quantity="other">Terapkan · %d hasil</item>
+    </plurals>
+    <string name="state_on">Aktif</string>
+    <string name="state_off">Nonaktif</string>
+    <string name="color_terracotta">Terakota</string>
+    <string name="color_blue">Biru</string>
+    <string name="color_teal">Hijau toska</string>
+    <string name="color_purple">Ungu</string>
+    <string name="color_olive">Zaitun</string>
+    <string name="category_set_a_budget">Atur anggaran</string>
+    <string name="category_budget_decrease">Kurangi %1$s</string>
+    <string name="category_budget_increase">Tambah %1$s</string>
+    <string name="category_roll_over_off_amount">Kembali ke %1$s pada %2$s. Sisa uang tidak terbawa.</string>
+    <string name="category_preview_name">Kategori baru</string>
+    <string name="category_preview_no_budget">%1$s · tanpa anggaran</string>
+    <string name="category_preview_budget">%1$s · %2$s per bulan</string>
+    <string name="category_type_locked_use">Jenis tidak bisa diubah setelah kategori dipakai, supaya laporan lama tetap sama.</string>
+    <string name="accounts_archive_this">Arsipkan akun ini</string>
+    <string name="accounts_unarchive_this">Keluarkan akun ini dari arsip</string>
+    <string name="accounts_delete_this">Hapus akun ini</string>
+    <string name="accounts_type_pick">Jenis akun</string>
+    <string name="accounts_opening_label_short">Saldo awal</string>
+    <string name="category_archive_this">Arsipkan kategori</string>
+    <string name="category_delete_this">Hapus kategori</string>
+    <string name="accounts_opening_negative">Akun ini dimulai di bawah nol.</string>
+    <string name="capture_all">Semua</string>
+    <string name="capture_fee_optional">Biaya (opsional)</string>
+    <string name="capture_below_zero">%1$s akan menjadi %2$s setelah ini.</string>
+    <string name="search_clear">Hapus pencarian</string>
+    <string name="settings_export_where">Pilih periode di Laporan</string>
+    <string name="settings_mascot">Maskot (Pratinjau)</string>
+    <string name="settings_mascot_calm">Tenang</string>
+    <string name="settings_mascot_alert">Waspada</string>
+    <string name="settings_mascot_help">Ekspresinya berubah mengikuti keadaan anggaranmu.</string>
+    <string name="state_loading">Memuat</string>
+    <string name="delete_confirm_title">Hapus transaksi ini?</string>
+    <string name="delete_confirm_transfer_title">Hapus transfer ini?</string>
+    <string name="delete_confirm_body">Saldo akun dan laporan langsung menyesuaikan. Kamu bisa membatalkannya dalam 5 detik.</string>
+    <string name="delete_confirm_transfer_body">Kedua sisi transfer, beserta biayanya jika ada, dihapus bersama. Kamu bisa membatalkannya dalam 5 detik.</string>
+    <string name="period_all_time">Semua waktu</string>
+    <string name="period_last_12_months">12 bulan</string>
+    <string name="accounts_flow_label">Masuk dan keluar · %1$s</string>
+    <string name="accounts_flow_clear">Tampilkan semua</string>
+    <string name="accounts_choose_period">Pilih periode</string>
+    <string name="accounts_history_empty">Tidak ada transaksi di periode ini.</string>
+    <string name="reports_metric_expenses">Pengeluaran</string>
+    <string name="reports_metric_income">Pemasukan</string>
+    <string name="reports_metric_net">Selisih</string>
+    <string name="reports_total_income">Total Pemasukan</string>
+    <string name="reports_total_net">Selisih · Pemasukan dikurangi Pengeluaran</string>
+    <string name="reports_trend_income">Tren Pemasukan</string>
+    <string name="reports_trend_net">Tren Selisih</string>
+    <string name="reports_in_and_out">Uang Masuk dan Keluar</string>
+    <string name="reports_no_income">Tidak ada pemasukan di periode ini.</string>
+    <string name="reports_income_by_category">Pemasukan per Kategori</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import org.nicho.arca.data.db.entities.BalanceRowEntity
+import org.nicho.arca.data.db.entities.CategoryCountRow
 import org.nicho.arca.data.db.entities.TransactionEntity
 import org.nicho.arca.data.db.entities.TransactionListItemRow
 
@@ -34,6 +35,12 @@ internal interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun getById(id: String): TransactionEntity?
 
+    @Query("SELECT * FROM transactions WHERE id = :id")
+    fun observeById(id: String): Flow<TransactionEntity?>
+
+    @Query("SELECT * FROM transactions WHERE transferGroupId = :groupId")
+    fun observeGroup(groupId: String): Flow<List<TransactionEntity>>
+
     @Query("SELECT * FROM transactions WHERE transferGroupId = :groupId")
     suspend fun inGroup(groupId: String): List<TransactionEntity>
 
@@ -58,6 +65,9 @@ internal interface TransactionDao {
 
     @Query("SELECT accountId, amountMinor, type FROM transactions")
     fun observeBalanceRows(): Flow<List<BalanceRowEntity>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM transactions)")
+    fun observeHasAny(): Flow<Boolean>
 
     // Display fields only; no arithmetic. LEFT JOINs because transfers have no category and
     // only transfer principals have a counter account.
@@ -84,6 +94,12 @@ internal interface TransactionDao {
     suspend fun getAll(): List<TransactionEntity>
 
     // A row count, not money, so it's outside the no-aggregates rule.
+    @Query("SELECT categoryId, COUNT(*) AS count FROM transactions WHERE categoryId IS NOT NULL GROUP BY categoryId")
+    fun observeCountsByCategory(): Flow<List<CategoryCountRow>>
+
+    @Query("SELECT MIN(date) FROM transactions")
+    fun observeEarliestDate(): Flow<Long?>
+
     @Query("SELECT COUNT(*) FROM transactions")
     suspend fun count(): Int
 }

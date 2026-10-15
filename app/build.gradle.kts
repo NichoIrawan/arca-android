@@ -57,6 +57,30 @@ android {
         compose = true
         buildConfig = true
     }
+
+    // Robolectric needs the merged resources: strings, drawables and the theme.
+    testOptions.unitTests.isIncludeAndroidResources = true
+}
+
+// Robolectric runs offline from a copied android-all jar, as in :data (the user-home path has a
+// space Robolectric's own download step can't handle).
+val robolectricRuntime = configurations.create("robolectricRuntime")
+val robolectricDepsDir = layout.buildDirectory.dir("robolectric-deps")
+val copyRobolectricRuntime = tasks.register<Copy>("copyRobolectricRuntime") {
+    from(robolectricRuntime)
+    into(robolectricDepsDir)
+}
+tasks.withType<Test>().configureEach {
+    dependsOn(copyRobolectricRuntime)
+    systemProperty("robolectric.offline", "true")
+    systemProperty("robolectric.dependency.dir", robolectricDepsDir.get().asFile.absolutePath)
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+    // Screenshots are opt-in: ./gradlew :app:testDebugUnitTest -Pscreenshots --tests "*ScreenshotHarness*"
+    val screenshots = project.providers.gradleProperty("screenshots")
+    if (screenshots.isPresent) {
+        systemProperty("arca.screenshots.dir", layout.buildDirectory.dir("screenshots").get().asFile.absolutePath)
+        outputs.upToDateWhen { false }
+    }
 }
 
 dependencies {
@@ -98,6 +122,12 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    add(robolectricRuntime.name, libs.robolectric.android.all)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.junit)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

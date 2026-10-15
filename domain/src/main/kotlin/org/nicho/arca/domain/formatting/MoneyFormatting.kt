@@ -3,74 +3,121 @@ package org.nicho.arca.domain.formatting
 import org.nicho.arca.domain.model.TransactionType
 
 /**
- * SDD-ARC-002 §7.7 · SDD-ARC-001 §5.3, DD-26. Every amount on screen goes through one of these;
- * a view never builds a money string itself.
+ * How numbers are written in the language the app is showing. The currency is always IDR; the
+ * language decides the separators and the compact units, as the Android prototype shows.
  *
- * The number format is fixed: `.` groups thousands, `,` marks a decimal (only Compact shows one).
- * The currency is always IDR, so the display language changes labels, never the number. Nothing
- * here reads the device locale or uses NumberFormat, whose data differs between the JVM and the
- * phone, so a test that passes here passes on the device too.
- *
- * Built from the amount's digit string, not by dividing it: formatting does no money arithmetic.
+ * This replaces SDD-ARC-002 §7.7's single fixed format (client decision, 2026-10-14): "50.000"
+ * reads as fifty to an English reader. Nothing here reads the device locale or uses NumberFormat,
+ * so a test on the JVM behaves exactly as the phone does.
  */
-fun interface MoneyFormatting {
-    fun format(amountMinor: Long): String
-}
+enum class NumberStyle(
+    internal val grouping: Char,
+    internal val decimal: Char,
+    internal val thousand: String,
+    internal val million: String,
+    internal val billion: String,
+    internal val trillion: String,
+) {
+    /** "Rp24.850.000", "Rp1,43 jt", "Rp40 rb". */
+    INDONESIAN('.', ',', " rb", " jt", " M", " T"),
 
-private const val MINUS = '−' // typographic minus, as the design system sets it
-
-/** "Rp50.000", "−Rp50.000". Most screens. */
-object StandardMoneyFormat : MoneyFormatting {
-    override fun format(amountMinor: Long): String {
-        val (negative, digits) = signAndDigits(amountMinor)
-        return (if (negative) "$MINUS" else "") + "Rp" + groupThousands(digits)
-    }
+    /** "Rp24,850,000", "Rp1.43M", "Rp40K". */
+    ENGLISH(',', '.', "K", "M", "B", "T"),
 }
 
 /**
- * "+Rp50.000", "−Rp50.000". Where the sign, not a colour, says which way money moved (NFR-A04).
- * DSG-ARC-001 §3.2: income +, expense −, transfer principal unsigned.
+ * SDD-ARC-002 §7.7, DD-26. Every amount on screen goes through here; a view never builds a money
+ * string itself. Built from the amount's digit string, never by dividing it, so formatting does
+ * no money arithmetic.
+ *
+ * Sign rules (DSG-ARC-001 §3.2): income "+", expense "−" (typographic minus), transfer unsigned.
  */
-object SignedMoneyFormat : MoneyFormatting {
-    override fun format(amountMinor: Long): String {
+class MoneyFormat(val style: NumberStyle) {
+
+    /** "Rp50,000", "−Rp30,000". */
+    fun amount(amountMinor: Long): String {
         val (negative, digits) = signAndDigits(amountMinor)
-        val sign = when {
-            negative -> "$MINUS"
-            digits == "0" -> ""
-            else -> "+"
-        }
-        return sign + "Rp" + groupThousands(digits)
+        return (if (negative) MINUS else "") + CURRENCY + group(digits)
     }
 
-    /** A transaction row. [amountMinor] is the stored, always-positive amount (DD-11). */
-    fun format(amountMinor: Long, type: TransactionType): String {
-        val plain = StandardMoneyFormat.format(amountMinor)
+    /** "50,000", "−30,000": for places that show "Rp" separately or not at all (list rows, heroes). */
+    fun digits(amountMinor: Long): String {
+        val (negative, digits) = signAndDigits(amountMinor)
+        return (if (negative) MINUS else "") + group(digits)
+    }
+
+    /**
+     * "30,000" for both 30,000 and −30,000: the size of an amount whose direction a label already
+     * says ("Over by", "Out"). Drops the sign from the digit string; no negation.
+     */
+    fun magnitude(amountMinor: Long): String = group(signAndDigits(amountMinor).second)
+
+    /** "+Rp50,000", "−Rp50,000", "Rp0": a signed value such as a net change. */
+    fun signed(amountMinor: Long, withCurrency: Boolean = true): String {
+        val (negative, digits) = signAndDigits(amountMinor)
+        return signOf(negative, digits) + (if (withCurrency) CURRENCY else "") + group(digits)
+    }
+
+    /**
+     * A transaction row, from the stored, always-positive amount (DD-11): "−32,000" for an
+     * expense, "+8,000,000" for income, "200,000" for a transfer leg.
+     */
+    fun transaction(amountMinor: Long, type: TransactionType, withCurrency: Boolean = false): String {
+        val plain = (if (withCurrency) CURRENCY else "") + group(signAndDigits(amountMinor).second)
         return when (type) {
             TransactionType.INCOME -> "+$plain"
             TransactionType.EXPENSE -> "$MINUS$plain"
             TransactionType.TRANSFER_OUT, TransactionType.TRANSFER_IN -> plain
+            TransactionType.ADJUSTMENT_IN -> "+$plain"
+            TransactionType.ADJUSTMENT_OUT -> "$MINUS$plain"
         }
     }
-}
 
-/**
- * "Rp850", "Rp50 rb", "Rp1,2 jt", "Rp3,5 M". Widgets and other tight spaces (FR-141).
- * One decimal at most, cut rather than rounded, so a compact figure never shows more money than
- * there is.
- */
-object CompactMoneyFormat : MoneyFormatting {
-    private val UNITS = listOf(12 to "T", 9 to "M", 6 to "jt", 3 to "rb") // triliun, miliar, juta, ribu
-
-    override fun format(amountMinor: Long): String {
+    /**
+     * "Rp1.43M", "Rp2.5M", "Rp1M", "Rp40K", "Rp850" (English) or "Rp1,43 jt", "Rp40 rb"
+     * (Indonesian), for tight spaces. Thousands show no decimals; millions and up show up to two,
+     * without trailing zeros, as the prototype prints them. Digits are cut, never rounded up, so a
+     * compact figure never shows more money than there is.
+     */
+    fun compact(amountMinor: Long, withCurrency: Boolean = true): String {
         val (negative, digits) = signAndDigits(amountMinor)
-        val sign = if (negative) "$MINUS" else ""
-        val unit = UNITS.firstOrNull { (zeros, _) -> digits.length > zeros }
-            ?: return sign + "Rp" + digits
-        val (zeros, label) = unit
-        val whole = digits.dropLast(zeros)
-        val firstDecimal = digits[digits.length - zeros]
-        val decimal = if (firstDecimal == '0') "" else ",$firstDecimal"
-        return sign + "Rp" + groupThousands(whole) + decimal + " " + label
+        return (if (negative) MINUS else "") + (if (withCurrency) CURRENCY else "") + compactDigits(digits, trimZeros = true)
+    }
+
+    /**
+     * "+8.20M", "−5.35M": a compact signed change (the Overview hero's In/Out/Net). Always two
+     * decimals, so the three figures side by side line up.
+     */
+    fun compactSigned(amountMinor: Long, withCurrency: Boolean = false): String {
+        val (negative, digits) = signAndDigits(amountMinor)
+        return signOf(negative, digits) + (if (withCurrency) CURRENCY else "") + compactDigits(digits, trimZeros = false)
+    }
+
+    private fun compactDigits(digits: String, trimZeros: Boolean): String {
+        val units = listOf(12 to style.trillion, 9 to style.billion, 6 to style.million, 3 to style.thousand)
+        val (zeros, label) = units.firstOrNull { (z, _) -> digits.length > z } ?: return digits
+        val whole = group(digits.dropLast(zeros))
+        if (zeros == 3) return whole + label
+        val decimals = digits.substring(digits.length - zeros, digits.length - zeros + 2)
+            .let { if (trimZeros) it.trimEnd('0') else it }
+        return if (decimals.isEmpty()) whole + label else whole + style.decimal + decimals + label
+    }
+
+    private fun group(digits: String): String =
+        digits.reversed().chunked(3).joinToString(style.grouping.toString()).reversed()
+
+    private fun signOf(negative: Boolean, digits: String) = when {
+        negative -> MINUS
+        digits == "0" -> ""
+        else -> "+"
+    }
+
+    companion object {
+        const val CURRENCY = "Rp"
+        const val MINUS = "−" // typographic minus, as the design system sets it
+
+        fun of(language: String): MoneyFormat =
+            MoneyFormat(if (language == "in" || language == "id") NumberStyle.INDONESIAN else NumberStyle.ENGLISH)
     }
 }
 
@@ -79,11 +126,11 @@ object CompactMoneyFormat : MoneyFormatting {
  * TalkBack reading "Rp50.000" digit by digit, or the dot as a decimal point, is what this exists
  * to prevent. Pick the language the app is showing.
  */
-class AccessibleMoneyFormat(private val language: SpokenLanguage) : MoneyFormatting {
+class AccessibleMoneyFormat(private val language: SpokenLanguage) {
 
     enum class SpokenLanguage { INDONESIAN, ENGLISH }
 
-    override fun format(amountMinor: Long): String {
+    fun format(amountMinor: Long): String {
         val (negative, digits) = signAndDigits(amountMinor)
         val words = when (language) {
             SpokenLanguage.INDONESIAN -> IndonesianWords.of(digits)
@@ -100,10 +147,6 @@ private fun signAndDigits(amountMinor: Long): Pair<Boolean, String> {
     val text = amountMinor.toString()
     return if (text.startsWith('-')) true to text.drop(1) else false to text
 }
-
-/** "1234567" → "1.234.567". */
-internal fun groupThousands(digits: String): String =
-    digits.reversed().chunked(3).joinToString(".").reversed()
 
 /** "1234567" → ["001", "234", "567"]: three-digit groups, most significant first. */
 private fun threeDigitGroups(digits: String): List<String> {

@@ -14,6 +14,7 @@ import org.nicho.arca.testing.testExpense
 import org.nicho.arca.testing.testIncome
 import org.nicho.arca.testing.testTransfer
 import org.nicho.arca.domain.model.CategoryKind
+import org.nicho.arca.domain.model.AccountFlow
 
 // SDD-ARC-001 §12.2 ReportAggregatorTests: transfers are not income or spending (SRS §6.3).
 class ReportAggregatorTest {
@@ -110,5 +111,38 @@ class ReportAggregatorTest {
 
         assertEquals(12, buckets.size)
         assertEquals(7_000L, buckets.single { it.start == LocalDate.of(2026, 3, 1) }.totalMinor)
+    }
+
+    @Test
+    fun summariesInPeriods_splitIncomeAndSpendingPerPeriod_andSkipTransfers() {
+        val first = monthPeriod(2026, 9)
+        val second = october
+        val txs = listOf(
+            testIncome(bca, salary, 500_000, at(2026, 10, 1)),
+            testExpense(bca, food, 200_000, at(2026, 10, 9)),
+            testExpense(bca, food, 30_000, at(2026, 9, 2)),
+            testExpense(bca, food, 1, at(2026, 11, 2)), // in neither period
+        ) + testTransfer(bca, gopay, 999_000, at(2026, 10, 3))
+
+        val sums = ReportAggregator.summariesInPeriods(txs, listOf(first, second))
+
+        assertEquals(PeriodSummary(0, 30_000, -30_000), sums[0])
+        assertEquals(PeriodSummary(500_000, 200_000, 300_000), sums[1])
+    }
+
+    @Test
+    fun accountFlowsInPeriods_countEveryRowThatMovesTheAccount() {
+        val txs = listOf(testIncome(bca, salary, 500_000, at(2026, 10, 1))) + testTransfer(bca, gopay, 100_000, at(2026, 10, 3))
+
+        val flows = ReportAggregator.accountFlowsInPeriods(txs, gopay.id, listOf(monthPeriod(2026, 9), october))
+
+        assertEquals(AccountFlow(0, 0, 0), flows[0])
+        assertEquals(AccountFlow(100_000, 0, 100_000), flows[1])
+    }
+
+    @Test
+    fun signedShares_keepTheSignAgainstTheLargestEitherWay() {
+        assertEquals(listOf(0.5f, -1f, 0f), ReportAggregator.signedShares(listOf(100L, -200L, 0L)))
+        assertEquals(listOf(0f, 0f), ReportAggregator.signedShares(listOf(0L, 0L)))
     }
 }

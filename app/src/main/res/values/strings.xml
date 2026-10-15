@@ -1,10 +1,504 @@
 <resources>
-    <!-- English. Every key here must also exist in values-in/strings.xml. -->
+    <!-- English. Every key here must also exist in values-in/strings.xml.
+         Copy names the problem and the fix and never blames (BEH-P2). -->
     <string name="app_name" translatable="false">Arca</string>
 
-    <!-- Navigation (SDD-ARC-002 §9.1) -->
+    <!-- Navigation -->
     <string name="nav_summary">Overview</string>
     <string name="nav_transactions">Transactions</string>
     <string name="nav_budget">Budget</string>
     <string name="nav_accounts">Accounts</string>
+
+    <!-- Common actions -->
+    <string name="action_add_transaction">Add transaction</string>
+    <string name="action_close">Close</string>
+    <string name="action_back">Back</string>
+    <string name="action_save">Save</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_select_date">Select date</string>
+    <string name="action_previous_month">Previous month</string>
+    <string name="action_next_month">Next month</string>
+    <string name="action_see_all">See all</string>
+
+    <!-- Dates and greetings -->
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="greeting_night">Good night</string>
+
+    <!-- Money flow labels -->
+    <string name="flow_in">In</string>
+    <string name="flow_out">Out</string>
+    <string name="flow_net">Net</string>
+
+    <!-- Transactions in rows -->
+    <string name="transaction_transfer">Transfer</string>
+    <string name="transaction_fee">Fee</string>
+    <string name="transaction_fee_subtitle">Transfer fee · %1$s</string>
+
+    <!-- Overview -->
+    <string name="summary_title">%1$s Overview</string>
+    <string name="summary_left_to_spend">Left to spend · %1$s</string>
+    <string name="summary_left_of">%1$s of %2$s</string>
+    <string name="summary_budget_left">%1$s left of %2$s</string>
+    <plurals name="summary_budget_over">
+        <item quantity="one">%d over</item>
+        <item quantity="other">%d over</item>
+    </plurals>
+    <plurals name="summary_budget_near">
+        <item quantity="one">%d nearly empty</item>
+        <item quantity="other">%d nearly empty</item>
+    </plurals>
+    <string name="summary_by_category">Expenses by Category</string>
+    <string name="summary_full_report">View full report</string>
+    <string name="summary_recent">Recent</string>
+    <string name="summary_insight_less">Spending less than in %1$s</string>
+    <string name="summary_insight_more">Spending more than in %1$s</string>
+    <string name="summary_insight_same">Spending about the same as %1$s</string>
+    <string name="summary_insight_down">Your expenses are down %1$d%%.</string>
+    <string name="summary_insight_up">Your expenses are up %1$d%%.</string>
+    <string name="summary_insight_flat">Your expenses are unchanged.</string>
+    <string name="summary_insight_left">%1$s left to spend.</string>
+    <string name="summary_empty_title">No transactions yet</string>
+    <string name="summary_empty_body">Your net worth and monthly overview will show up here once you add your first transaction.</string>
+    <string name="summary_empty_action">Add your first transaction</string>
+
+    <!-- Transactions -->
+    <string name="transactions_header_out">%1$s out</string>
+    <plurals name="transactions_expense_count">
+        <item quantity="one">%d expense</item>
+        <item quantity="other">%d expenses</item>
+    </plurals>
+    <string name="transactions_empty_title">No transactions yet</string>
+    <string name="transactions_empty_body">Your income and expenses will show up here, grouped by day.</string>
+    <string name="transactions_no_match">Nothing matches these filters.</string>
+
+    <!-- Filter -->
+    <string name="filter_title">Filter</string>
+    <string name="filter_reset">Reset</string>
+    <string name="filter_apply">Apply</string>
+    <string name="filter_all">All</string>
+    <string name="filter_income">Income</string>
+    <string name="filter_expenses">Expenses</string>
+    <string name="filter_transfers">Transfers</string>
+    <string name="filter_period">Period</string>
+    <string name="filter_this_month">This month</string>
+    <string name="filter_last_month">Last month</string>
+    <string name="filter_last_30_days">30 days</string>
+    <string name="filter_last_3_months">3 months</string>
+    <string name="filter_range">Range…</string>
+    <string name="filter_categories">Categories</string>
+    <string name="filter_sort">Sort by</string>
+    <string name="filter_all_accounts">All accounts</string>
+    <string name="filter_all_categories">All categories</string>
+    <plurals name="filter_n_accounts">
+        <item quantity="one">%d account</item>
+        <item quantity="other">%d accounts</item>
+    </plurals>
+    <plurals name="filter_n_categories">
+        <item quantity="one">%d category</item>
+        <item quantity="other">%d categories</item>
+    </plurals>
+    <plurals name="filter_last_n_days">
+        <item quantity="one">Last %d day</item>
+        <item quantity="other">Last %d days</item>
+    </plurals>
+    <string name="sort_newest">Newest</string>
+    <string name="sort_oldest">Oldest</string>
+    <string name="sort_largest">Largest</string>
+
+    <!-- Search -->
+    <string name="search_title">Search transactions</string>
+    <string name="search_placeholder">Search notes</string>
+    <string name="search_hint">Searching transaction notes</string>
+    <plurals name="search_results">
+        <item quantity="one">%1$d result for “%2$s”</item>
+        <item quantity="other">%1$d results for “%2$s”</item>
+    </plurals>
+
+    <!-- Transaction detail -->
+    <string name="detail_transfer_fee">Transfer fee</string>
+    <string name="detail_counted_in">Counted in</string>
+    <string name="detail_reports_excluded">Reports: excluded</string>
+    <string name="detail_reports_included">Reports: included</string>
+    <string name="detail_no_note">None yet</string>
+    <plurals name="detail_linked_records">
+        <item quantity="one">%d linked record</item>
+        <item quantity="other">%d linked records</item>
+    </plurals>
+    <plurals name="detail_linked_delete_note">
+        <item quantity="one">Deleting this transfer deletes its %d record.</item>
+        <item quantity="other">Deleting this transfer deletes all %d records at once.</item>
+    </plurals>
+    <string name="detail_leg_out">Out</string>
+    <string name="detail_leg_in">In</string>
+    <string name="detail_fee_locked">%1$s · category locked</string>
+    <string name="detail_delete_transfer">Delete transfer</string>
+    <string name="detail_delete_transaction">Delete transaction</string>
+    <string name="detail_undo_note">You can undo this for a few seconds after deleting.</string>
+
+    <!-- Accounts -->
+    <string name="accounts_add">Add account</string>
+    <string name="accounts_net_worth">Net Worth</string>
+    <string name="accounts_favorites">Favorites</string>
+    <string name="accounts_favorite">Favorite</string>
+    <string name="accounts_negative_balance">Negative balance</string>
+    <string name="accounts_archived">Archived (%1$d)</string>
+    <string name="accounts_empty_title">No accounts yet</string>
+    <string name="accounts_empty_body">An account is where your money lives: a wallet, a bank account, or an e-wallet. Add one to start tracking.</string>
+    <plurals name="accounts_transaction_count">
+        <item quantity="one">%d transaction</item>
+        <item quantity="other">%d transactions</item>
+    </plurals>
+    <string name="accounts_opening_balance">Opening balance %1$s</string>
+    <string name="accounts_make_favorite">Add to favorites</string>
+    <string name="accounts_unfavorite">Remove from favorites</string>
+    <string name="accounts_archive">Archive account</string>
+    <string name="accounts_unarchive">Unarchive account</string>
+    <string name="accounts_delete">Delete account</string>
+    <string name="accounts_history">History</string>
+    <string name="accounts_new_title">New Account</string>
+    <string name="accounts_edit_title">Edit Account</string>
+    <string name="accounts_current_balance">Current Balance</string>
+    <string name="accounts_current_balance_help">Calculated automatically from the opening balance and all of this account’s transactions.</string>
+    <string name="accounts_name">Name</string>
+    <string name="accounts_name_placeholder">e.g. BCA</string>
+    <string name="accounts_type">Type</string>
+    <string name="accounts_opening_balance_label">Opening balance</string>
+    <string name="accounts_opening_help">What the account held when you started tracking it. May be negative.</string>
+    <string name="accounts_opening_locked">Locked once the first transaction is added, so your history stays accurate.</string>
+    <string name="accounts_favorite_help">Favorites come first when you add a transaction.</string>
+    <string name="accounts_archive_help">Accounts with transactions can’t be deleted. Archiving hides it when adding transactions; its history stays intact.</string>
+    <string name="account_type_cash">Cash</string>
+    <string name="account_type_bank">Bank</string>
+    <string name="account_type_ewallet">E-Wallet</string>
+    <string name="account_type_other">Other</string>
+
+    <!-- Budget -->
+    <string name="budget_left">left</string>
+    <string name="budget_spent_of">Spent %1$s of %2$s</string>
+    <string name="budget_over_by">Over by %1$s</string>
+    <string name="budget_left_to_spend">Left to spend</string>
+    <string name="budget_no_envelopes">No budgets yet. Set one on a category to start an envelope.</string>
+    <string name="budget_hero_meta">Spent %1$s · Total budget %2$s</string>
+    <string name="budget_total_help">Total budget is the sum of your envelopes. Edit an envelope to change it.</string>
+    <string name="budget_view_expenses">Expenses</string>
+    <string name="budget_view_income">Income</string>
+    <string name="budget_budgeted">Budgeted</string>
+    <string name="budget_not_budgeted">Not budgeted</string>
+    <string name="budget_spent">%1$s spent</string>
+    <string name="budget_spent_never">%1$s spent · never budgeted</string>
+    <string name="budget_set_budget">Set budget</string>
+    <string name="budget_not_counted">Not counted in your total budget.</string>
+    <string name="budget_archived">Archived (%1$d)</string>
+    <string name="budget_archived_help">Archived categories don’t appear when adding transactions. Their history stays intact.</string>
+    <string name="budget_received">Received</string>
+    <string name="budget_income_help">No budget for income. Envelopes are for spending only.</string>
+    <string name="budget_spending_report">Spending report</string>
+    <string name="budget_resets">Resets %1$s</string>
+    <string name="budget_rolls_over_from">Rolls over · +%1$s from %2$s</string>
+    <string name="budget_rolls_over_nothing">Rolls over · nothing carried in</string>
+
+    <!-- Category detail and editor -->
+    <string name="category_rolls_over">Rolls over</string>
+    <string name="category_resets_monthly">Resets monthly</string>
+    <string name="category_percent_left">%1$d%% left</string>
+    <string name="category_budget">Budget</string>
+    <string name="category_spent">Spent</string>
+    <string name="category_carried_in">Carried in</string>
+    <string name="category_not_budgeted_spent">Not budgeted · %1$s spent</string>
+    <string name="category_income_no_budget">Income categories don’t have budgets.</string>
+    <plurals name="category_transaction_count">
+        <item quantity="one">%d transaction</item>
+        <item quantity="other">%d transactions</item>
+    </plurals>
+    <string name="category_new_title">New Category</string>
+    <string name="category_edit_title">Edit Category</string>
+    <string name="category_name_placeholder">e.g. Coffee</string>
+    <string name="category_monthly_budget">Monthly budget</string>
+    <string name="category_no_budget">No budget</string>
+    <string name="category_budget_help_new">Optional. Without a budget, spending is still tracked and listed under Not budgeted.</string>
+    <string name="category_budget_help_edit">A change applies from this month on. Past months keep the budget they had.</string>
+    <string name="category_remove_budget">Remove budget</string>
+    <string name="category_roll_over">Roll over leftover to next month</string>
+    <string name="category_roll_over_on">Unspent money carries into next month’s envelope. Overspending never carries over.</string>
+    <string name="category_roll_over_off">The envelope resets on the 1st. Unspent money doesn’t carry over.</string>
+    <string name="category_type_locked">Type can’t be changed once the category exists, so past reports stay the same.</string>
+    <string name="category_archive">Archive category</string>
+    <string name="category_unarchive">Unarchive category</string>
+    <string name="category_delete">Delete category</string>
+    <string name="category_archive_help">Categories with transactions can’t be deleted. Archiving hides it when adding transactions; its history stays intact.</string>
+    <string name="category_in_use">This category has transactions, so it can only be archived.</string>
+    <string name="editor_color">Color</string>
+    <string name="editor_icon">Icon</string>
+
+    <!-- Reports -->
+    <string name="reports_title">Reports</string>
+    <string name="reports_total_expenses">Total Expenses</string>
+    <string name="reports_trend">Spending Trend</string>
+    <string name="reports_trend_description">Daily spending this month. Highest day: %1$s</string>
+    <string name="reports_peak_day">Busiest day: %1$s</string>
+    <string name="reports_no_expenses">No expenses in this period.</string>
+    <string name="reports_less_than">%1$d%% less than %2$s</string>
+    <string name="reports_more_than">%1$d%% more than %2$s</string>
+    <string name="reports_same_as">Same as %1$s</string>
+    <string name="reports_no_comparison">Nothing to compare with %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_security">Security</string>
+    <string name="settings_fingerprint">Lock with fingerprint</string>
+    <string name="settings_fingerprint_help">Asks for your fingerprint or screen lock when you open Arca, and hides it in recent apps.</string>
+    <string name="settings_data">Data</string>
+    <string name="settings_export">Export data (CSV)</string>
+    <string name="settings_export_soon">Coming soon</string>
+    <string name="settings_demo_data">Load sample data</string>
+    <string name="settings_demo_debug_only">Internal testing &amp; debug builds only</string>
+    <string name="settings_demo_loading">Loading…</string>
+    <string name="settings_demo_loaded">Sample data loaded.</string>
+    <string name="settings_demo_confirm_title">Replace your data?</string>
+    <string name="settings_demo_confirm_body">You already have accounts or transactions. Loading sample data deletes them and can’t be undone.</string>
+    <string name="settings_demo_confirm_replace">Replace</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version</string>
+
+    <!-- Capture -->
+    <string name="capture_title_new">New Transaction</string>
+    <string name="capture_title_edit">Edit Transaction</string>
+    <string name="capture_mode_expense">Expense</string>
+    <string name="capture_mode_income">Income</string>
+    <string name="capture_mode_transfer">Transfer</string>
+    <string name="capture_amount_hint">Type “50K” · becomes Rp 50,000</string>
+    <string name="capture_account">Account</string>
+    <string name="capture_category">Category</string>
+    <string name="capture_from">From</string>
+    <string name="capture_to">To</string>
+    <string name="capture_fee">Fee</string>
+    <string name="capture_date">Date</string>
+    <string name="capture_note">Note</string>
+    <string name="capture_optional">Optional</string>
+    <string name="capture_choose_account">Choose account</string>
+
+    <!-- Validation (SDD-ARC-001 §11.3) -->
+    <string name="issue_amount_positive">Enter an amount above 0</string>
+    <string name="issue_amount_unclear">That amount isn’t clear. Try 50000, 50K or 1.5M</string>
+    <string name="issue_amount_too_large">That amount is too large</string>
+    <string name="issue_account_required">Choose an account</string>
+    <string name="issue_account_archived">This account is archived. Choose another one</string>
+    <string name="issue_category_required">Choose a category</string>
+    <string name="issue_category_mismatch">Choose a category of the same type</string>
+    <string name="issue_future_date">The date can’t be in the future</string>
+    <string name="issue_note_too_long">Keep the note under 280 characters</string>
+    <string name="issue_same_account">Choose a different destination account</string>
+    <string name="issue_destination_required">Choose where the money goes</string>
+    <string name="issue_fee_invalid">Enter a fee above 0, or leave it empty</string>
+    <string name="issue_save_failed">Couldn’t save. Please try again</string>
+    <string name="issue_name_required">Enter a name</string>
+    <string name="issue_account_name_too_long">Keep the name under 40 characters</string>
+    <string name="issue_category_name_too_long">Keep the name under 30 characters</string>
+
+    <!-- Undo (DD-A11) -->
+    <string name="undo_transaction_deleted">Transaction deleted</string>
+    <plurals name="undo_transfer_deleted">
+        <item quantity="one">Transfer deleted (%d record)</item>
+        <item quantity="other">Transfer deleted (%d records)</item>
+    </plurals>
+    <string name="budget_hero_over">Over by</string>
+    <string name="budget_hero_left_over">Left over</string>
+    <string name="budget_hero_available">Available</string>
+    <string name="budget_meta_closed">Closed</string>
+    <string name="budget_meta_starts">Starts %1$s</string>
+    <string name="budget_meta_ends_today">Ends today</string>
+    <string name="budget_closed_note">%1$s rolled into %2$s and %3$s reset on %4$s.</string>
+    <string name="budget_closed_over">Overspending (%1$s) isn’t carried over.</string>
+    <string name="budget_total_help_carried">Total budget is the sum of your envelopes (incl. %1$s rolled over). Edit an envelope to change it.</string>
+    <string name="budget_word_unspent">unspent</string>
+    <string name="budget_word_available">available</string>
+    <string name="budget_no_transactions">No transactions</string>
+    <string name="budget_no_transactions_yet">No transactions yet</string>
+    <string name="budget_reset_past">Reset %1$s</string>
+    <string name="budget_rolled_into">Rolled over · %1$s into %2$s</string>
+    <string name="budget_rolls_over_overspent">Rolls over · overspending isn’t carried</string>
+    <string name="budget_rolls_over_nothing_left">Rolls over · nothing left to carry</string>
+    <string name="transaction_adjustment">Balance adjustment</string>
+    <plurals name="budget_meta_days_left">
+        <item quantity="one">%d day left</item>
+        <item quantity="other">%d days left</item>
+    </plurals>
+    <string name="summary_other">Other</string>
+    <string name="summary_view_budget">View budget</string>
+    <string name="category_kind_expense">Expense</string>
+    <string name="category_kind_income">Income</string>
+    <string name="category_over">over</string>
+    <string name="category_spent_word">spent</string>
+    <string name="category_received_word">received</string>
+    <string name="category_never_budgeted">Fees are never budgeted: they’re listed with your spending but don’t use an envelope.</string>
+    <string name="category_not_budgeted_help">Not budgeted. Spending is still tracked; tap Edit to give it an envelope.</string>
+    <string name="action_done">Done</string>
+    <string name="reports_export">Export CSV</string>
+    <string name="reports_range_7">7 days</string>
+    <string name="reports_range_28">28 days</string>
+    <string name="reports_range_month">Monthly</string>
+    <string name="reports_choose_month">Choose Month</string>
+    <string name="reports_previous">previous</string>
+    <string name="reports_first_on_record">First month on record</string>
+    <string name="reports_same_as_short">Same as %1$s</string>
+    <string name="reports_vs">vs %1$s</string>
+    <string name="reports_daily">Daily</string>
+    <string name="reports_weekly">Weekly</string>
+    <string name="reports_week_n">Week %1$d</string>
+    <string name="reports_previous_bar">Previous bar</string>
+    <string name="reports_next_bar">Next bar</string>
+    <string name="reports_everything_else">Everything else</string>
+    <string name="reports_no_change">No change</string>
+    <string name="reports_previous_year">Previous year</string>
+    <string name="reports_next_year">Next year</string>
+    <string name="reports_data_since">Data available since %1$s.</string>
+    <string name="reports_exported">Exported</string>
+    <string name="reports_export_this_month">This month</string>
+    <string name="reports_export_3_months">Last 3 months</string>
+    <string name="reports_export_all">All data</string>
+    <string name="reports_export_help">Columns: date, account, category, type, amount, note. Saved to your device as a backup.</string>
+    <string name="reports_export_failed">Couldn’t save the file. Try again.</string>
+    <string name="reports_export_action">Export</string>
+    <plurals name="reports_previous_days">
+        <item quantity="one">previous %d day</item>
+        <item quantity="other">previous %d days</item>
+    </plurals>
+    <plurals name="reports_n_days">
+        <item quantity="one">(%d day)</item>
+        <item quantity="other">(%d days)</item>
+    </plurals>
+    <plurals name="reports_exported_count">
+        <item quantity="one">%d transaction saved to Downloads</item>
+        <item quantity="other">%d transactions saved to Downloads</item>
+    </plurals>
+    <string name="state_expanded">Expanded</string>
+    <string name="state_collapsed">Collapsed</string>
+    <string name="accounts_negative_one">%1$s is below zero</string>
+    <string name="accounts_negative_help">Check for a missing income or transfer, or adjust the balance on the account’s page.</string>
+    <string name="accounts_archived_help">Archived accounts don’t appear when adding transactions and aren’t counted in your net worth. Their history stays intact.</string>
+    <string name="accounts_common_types">Common account types</string>
+    <plurals name="accounts_negative_many">
+        <item quantity="one">%d account is below zero</item>
+        <item quantity="other">%d accounts are below zero</item>
+    </plurals>
+    <string name="adjust_title">Adjust balance</string>
+    <string name="adjust_action">Adjust balance</string>
+    <string name="adjust_calculated">Arca’s balance for %1$s</string>
+    <string name="adjust_actual">Actual balance</string>
+    <string name="adjust_hint">What the account really holds today. Use a minus sign for an overdraft, e.g. -120rb.</string>
+    <string name="adjust_matches">That’s already the balance. Nothing to record.</string>
+    <string name="adjust_will_record">Records an adjustment of %1$s today</string>
+    <string name="adjust_explainer">Not counted as income or spending. Earlier balances stay as they were.</string>
+    <string name="adjust_negative">This balance is below zero.</string>
+    <string name="adjust_note_placeholder">Optional, e.g. counted at the ATM</string>
+    <string name="adjust_save">Save adjustment</string>
+    <string name="transaction_to">To %1$s</string>
+    <string name="transaction_from">From %1$s</string>
+    <string name="accounts_opening_since">Opening balance %1$s · since %2$s</string>
+    <string name="accounts_balance_trend">Balance Trend</string>
+    <string name="accounts_trend_today">Today, %1$s</string>
+    <string name="accounts_trend_end_of">End of %1$s</string>
+    <string name="accounts_trend_week_of">Week of %1$s</string>
+    <string name="accounts_trend_monthly">Monthly</string>
+    <string name="accounts_negative_this">This balance is below zero</string>
+    <string name="accounts_negative_this_help">If that isn’t right, check for a missing income or transfer, or adjust the balance.</string>
+    <plurals name="accounts_transactions_word">
+        <item quantity="one">transaction</item>
+        <item quantity="other">transactions</item>
+    </plurals>
+    <string name="date_two_days_ago">2 days ago</string>
+    <string name="date_pick_title">Pick a date</string>
+    <string name="date_selected">Selected date</string>
+    <string name="date_select">Select date</string>
+    <string name="range_last_7_days">Last 7 days</string>
+    <string name="range_this_quarter">This quarter</string>
+    <string name="range_title">Date range</string>
+    <string name="range_label">Range</string>
+    <string name="range_pick_end">Pick an end date</string>
+    <string name="range_apply">Apply range</string>
+    <string name="filter_clear_all">Clear all</string>
+    <string name="filter_remove">Remove %1$s filter</string>
+    <string name="filter_title_active">Filter, active</string>
+    <string name="filter_see_all">See all</string>
+    <string name="filter_show_less">Show less</string>
+    <string name="filter_selected_meta">%1$d selected · %2$d of %3$d</string>
+    <string name="transactions_out_plain">%1$s out</string>
+    <string name="transactions_header_out_month">%1$s out this month</string>
+    <plurals name="range_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="transactions_results">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
+    <plurals name="filter_apply_results">
+        <item quantity="one">Apply · %d result</item>
+        <item quantity="other">Apply · %d results</item>
+    </plurals>
+    <string name="state_on">On</string>
+    <string name="state_off">Off</string>
+    <string name="color_terracotta">Terracotta</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_teal">Teal</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_olive">Olive</string>
+    <string name="category_set_a_budget">Set a budget</string>
+    <string name="category_budget_decrease">Decrease by %1$s</string>
+    <string name="category_budget_increase">Increase by %1$s</string>
+    <string name="category_roll_over_off_amount">Resets to %1$s on %2$s. Unspent money doesn’t carry over.</string>
+    <string name="category_preview_name">New category</string>
+    <string name="category_preview_no_budget">%1$s · no budget</string>
+    <string name="category_preview_budget">%1$s · %2$s a month</string>
+    <string name="category_type_locked_use">Type can’t be changed once the category is in use, so past reports stay the same.</string>
+    <string name="accounts_archive_this">Archive this account</string>
+    <string name="accounts_unarchive_this">Unarchive this account</string>
+    <string name="accounts_delete_this">Delete this account</string>
+    <string name="accounts_type_pick">Account type</string>
+    <string name="accounts_opening_label_short">Opening balance</string>
+    <string name="category_archive_this">Archive category</string>
+    <string name="category_delete_this">Delete category</string>
+    <string name="accounts_opening_negative">This account opens below zero.</string>
+    <string name="capture_all">All</string>
+    <string name="capture_fee_optional">Fee (optional)</string>
+    <string name="capture_below_zero">%1$s will be %2$s after this.</string>
+    <string name="search_clear">Clear search</string>
+    <string name="settings_export_where">Choose a period in Reports</string>
+    <string name="settings_mascot">Mascot (Preview)</string>
+    <string name="settings_mascot_calm">Calm</string>
+    <string name="settings_mascot_alert">Alert</string>
+    <string name="settings_mascot_help">Its expression changes with the state of your budget.</string>
+    <string name="state_loading">Loading</string>
+    <string name="delete_confirm_title">Delete this transaction?</string>
+    <string name="delete_confirm_transfer_title">Delete this transfer?</string>
+    <string name="delete_confirm_body">Its account balance and reports update right away. You can undo for 5 seconds.</string>
+    <string name="delete_confirm_transfer_body">Both sides of the transfer, and its fee if it has one, are deleted together. You can undo for 5 seconds.</string>
+    <string name="period_all_time">All time</string>
+    <string name="period_last_12_months">12 months</string>
+    <string name="accounts_flow_label">In and out · %1$s</string>
+    <string name="accounts_flow_clear">Show all</string>
+    <string name="accounts_choose_period">Choose period</string>
+    <string name="accounts_history_empty">Nothing in this period.</string>
+    <string name="reports_metric_expenses">Expenses</string>
+    <string name="reports_metric_income">Income</string>
+    <string name="reports_metric_net">Net</string>
+    <string name="reports_total_income">Total Income</string>
+    <string name="reports_total_net">Net · Income minus Expenses</string>
+    <string name="reports_trend_income">Income Trend</string>
+    <string name="reports_trend_net">Net Trend</string>
+    <string name="reports_in_and_out">Money In and Out</string>
+    <string name="reports_no_income">No income in this period.</string>
+    <string name="reports_income_by_category">Income by Category</string>
 </resources>

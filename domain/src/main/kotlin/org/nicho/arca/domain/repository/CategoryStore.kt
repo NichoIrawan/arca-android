@@ -25,6 +25,9 @@ interface CategoryStore {
 
     suspend fun archive(id: CategoryId)
 
+    /** Brings an archived category back to the capture form. */
+    suspend fun unarchive(id: CategoryId)
+
     /**
      * Throws DomainError.CategoryIsSystemLocked for Fees and DomainError.CategoryHasTransactions
      * for a category with history; archive is the permitted alternative in both cases.

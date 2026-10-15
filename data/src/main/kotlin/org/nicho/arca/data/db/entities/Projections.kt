@@ -13,6 +13,12 @@ internal data class BalanceRowEntity(
 )
 
 /** A list row: the transaction plus the display fields of what it points at (§8.1). */
+/** How many transactions a category has: the archived list's "3 transactions". A count, not money. */
+internal data class CategoryCountRow(
+    val categoryId: String,
+    val count: Int,
+)
+
 internal data class TransactionListItemRow(
     @Embedded val transaction: TransactionEntity,
     val accountName: String,

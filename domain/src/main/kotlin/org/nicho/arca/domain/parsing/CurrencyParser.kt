@@ -64,6 +64,22 @@ object CurrencyParser {
         }
     }
 
+    /**
+     * An account's opening balance, which may be negative or zero (SRS §6.1: a credit card or an
+     * overdraft opens below zero). Same grammar as [parse], plus a leading minus sign.
+     */
+    fun parseBalance(input: String): Result {
+        val trimmed = input.trim()
+        val negative = trimmed.startsWith('-') || trimmed.startsWith('−')
+        val body = if (negative) trimmed.drop(1) else trimmed
+        if (body.trimStart().firstOrNull() in MINUS_SIGNS.toList()) return Result.Invalid(ParseError.NOT_A_NUMBER) // "--5"
+        return when (val parsed = parse(body)) {
+            is Result.Amount -> if (negative) Result.Amount(Math.negateExact(parsed.minor)) else parsed
+            // With the sign removed, NOT_POSITIVE can only mean the value is zero.
+            is Result.Invalid -> if (parsed.error == ParseError.NOT_POSITIVE) Result.Amount(0) else parsed
+        }
+    }
+
     /** Convenience for callers that only need the value: null when [input] isn't a valid amount. */
     fun parseOrNull(input: String): Long? = (parse(input) as? Result.Amount)?.minor
 

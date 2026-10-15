@@ -12,4 +12,8 @@ data class EnvelopeSummary(
     val totalLeftMinor: Long,
     val totalStatus: BudgetStatus,          // what summary surfaces pass to the mascot (§16.2)
     val allSpendingMinor: Long,             // envelopes + not budgeted, so the screen can't under-report
+    val carriedInMinor: Long = 0,           // Σ carry: "incl. Rp480,000 rolled over"
+    val rollsOutMinor: Long = 0,            // what roll-over envelopes have left, carried into next month
+    val resetsMinor: Long = 0,              // what the other envelopes have left, which resets
+    val overspentMinor: Long = 0,           // Σ over-by; overspending is never carried
 )

@@ -20,6 +20,16 @@ data class ArcaMotion(
     /** Rolling numbers (§8.3): a figure that changes counts to its new value. */
     val rollingNumberMillis: Int,
     val rollingNumberEasing: Easing,
+    /** Bars and columns grow from zero (the prototype's m-reveal-x / m-reveal-y). */
+    val revealMillis: Int,
+    val revealEasing: Easing,
+    /** Delay between neighbouring bars, so the eye can follow the sweep. */
+    val revealStepMillis: Int,
+    /** Tab content arrives block by block: an 8dp rise and fade, each block a step later. */
+    val pageInMillis: Int,
+    val pageStepMillis: Int,
+    /** A pushed screen's content arrives from the right ("deeper"). */
+    val pushInMillis: Int,
 )
 
 /**
@@ -53,4 +63,12 @@ val ArcaMotionTokens = ArcaMotion(
     easeDrawer = CubicBezierEasing(0.32f, 0.72f, 0f, 1f),
     rollingNumberMillis = 900,
     rollingNumberEasing = RollingNumberEasing,
+    revealMillis = 640,
+    revealEasing = CubicBezierEasing(0.16f, 1f, 0.3f, 1f),
+    revealStepMillis = 70,
+    // Client request (2026-10-15): screen transitions settle within 100ms; the prototype's 280ms
+    // rise and 40ms stagger read as lag on a phone.
+    pageInMillis = 120,
+    pageStepMillis = 15,
+    pushInMillis = 100,
 )

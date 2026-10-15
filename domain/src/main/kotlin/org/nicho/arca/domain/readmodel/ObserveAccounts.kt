@@ -11,9 +11,10 @@ import org.nicho.arca.domain.repository.AccountReading
 import org.nicho.arca.domain.repository.TransactionReading
 
 /**
- * The Accounts tab: grouped by type in FR-204's order (cash, bank, e-wallet, other), each with
- * its subtotal. Within a group, accounts keep the store's order (sortOrder, then name).
- * One balance-row observer serves every account, rather than one query per account (DD-A10).
+ * The Accounts tab: accounts grouped by type, each group with its subtotal and its share of the
+ * money held. Groups are ordered largest subtotal first (the prototype's order); within a group,
+ * accounts keep the store's order (sortOrder, then name). One balance-row observer serves every
+ * account, rather than one query per account (DD-A10).
  */
 class ObserveAccounts(
     private val transactions: TransactionReading,
@@ -27,13 +28,17 @@ class ObserveAccounts(
         ) { rows, allAccounts ->
             val balances = BalanceCalculator.balances(rows, allAccounts)
             val subtotals = BalanceCalculator.subtotalsByType(allAccounts, balances)
+            val shares = BalanceCalculator.composition(subtotals)
             val withBalances = allAccounts.map { AccountBalance(it, balances.getValue(it.id)) }
             val (archived, active) = withBalances.partition { it.account.isArchived }
             AccountsModel(
-                groups = AccountType.entries.mapNotNull { type ->
-                    val members = active.filter { it.account.type == type }
-                    if (members.isEmpty()) null else AccountGroup(type, members, subtotals.getValue(type))
-                },
+                groups = AccountType.entries
+                    .mapNotNull { type ->
+                        val members = active.filter { it.account.type == type }
+                        if (members.isEmpty()) null else AccountGroup(type, members, subtotals.getValue(type), shares[type] ?: 0f)
+                    }
+                    .sortedByDescending { it.subtotalMinor },
+                favorites = active.filter { it.account.isFavorite },
                 archived = archived,
                 netPositionMinor = BalanceCalculator.netPosition(allAccounts, balances),
             )

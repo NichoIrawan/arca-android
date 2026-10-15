@@ -47,6 +47,11 @@ class InMemoryCategoryStore internal constructor(
         replace(existing.copy(isArchived = true))
     }
 
+    override suspend fun unarchive(id: CategoryId) {
+        val existing = byId(id) ?: throw missing(id)
+        replace(existing.copy(isArchived = false))
+    }
+
     override suspend fun delete(id: CategoryId) {
         val existing = byId(id) ?: return
         if (existing.isSystemLocked) throw DomainError.CategoryIsSystemLocked()
